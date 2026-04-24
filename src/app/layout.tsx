@@ -1,7 +1,8 @@
 import { Geist_Mono, Noto_Sans, Outfit } from "next/font/google"
 
 import "./globals.css"
-import "./src/lib/env"
+import "../lib/env"
+// changes applied here
 
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";

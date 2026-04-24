@@ -1,4 +1,5 @@
 import { api } from "@/lib/apiClient";
+import { authApi } from "@/lib/authClient";
 
 export interface RegisterData {
   name: string;
@@ -37,15 +38,15 @@ export interface AuthResponse {
 
 export const authService = {
   register: async (data: RegisterData): Promise<AuthResponse> => {
-    return api.post<AuthResponse>("/auth/register", data);
+    return authApi.post<AuthResponse>("/register", data);
   },
 
   login: async (data: LoginData): Promise<AuthResponse> => {
-    return api.post<AuthResponse>("/auth/login", data);
+    return authApi.post<AuthResponse>("/login", data);
   },
 
   getMe: async (): Promise<{ success: boolean; message: string; data: User }> => {
-    return api.get("/auth/me");
+    return authApi.get("/me");
   },
 
   refreshToken: async (): Promise<{
@@ -53,26 +54,26 @@ export const authService = {
     message: string;
     data: { accessToken: string; refreshToken: string; sessionToken: string };
   }> => {
-    return api.post("/auth/refresh-token");
+    return authApi.post("/refresh-token");
   },
 
   changePassword: async (data: {
     currentPassword: string;
     newPassword: string;
   }): Promise<{ success: boolean; message: string; data: { token: string; accessToken: string; refreshToken: string } }> => {
-    return api.post("/auth/change-password", data);
+    return authApi.post("/change-password", data);
   },
 
   logout: async (): Promise<{ success: boolean; message: string; data: { success: boolean } }> => {
-    return api.post("/auth/logout");
+    return authApi.post("/logout");
   },
 
   verifyEmail: async (data: { email: string; otp: string }): Promise<{ success: boolean; message: string }> => {
-    return api.post("/auth/verify-email", data);
+    return authApi.post("/verify-email", data);
   },
 
   forgetPassword: async (email: string): Promise<{ success: boolean; message: string }> => {
-    return api.post("/auth/forget-password", { email });
+    return authApi.post("/forget-password", { email });
   },
 
   resetPassword: async (data: {
@@ -80,10 +81,10 @@ export const authService = {
     otp: string;
     newPassword: string;
   }): Promise<{ success: boolean; message: string }> => {
-    return api.post("/auth/reset-password", data);
+    return authApi.post("/reset-password", data);
   },
 
   resendOtp: async (email: string): Promise<{ success: boolean; message: string }> => {
-    return api.post("/auth/resend-otp", { email });
+    return authApi.post("/resend-otp", { email });
   },
 };
