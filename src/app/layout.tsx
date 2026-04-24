@@ -1,12 +1,13 @@
-import { Geist, Geist_Mono, Noto_Sans, Outfit } from "next/font/google"
+import { Geist_Mono, Noto_Sans, Outfit } from "next/font/google"
 
 import "./globals.css"
-import { ThemeProvider } from "@/components/theme-provider"
+
+import { ThemeProvider } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 
-const outfitHeading = Outfit({subsets:['latin'],variable:'--font-heading'});
+const outfitHeading = Outfit({ subsets: ['latin'], variable: '--font-heading' });
 
-const notoSans = Noto_Sans({subsets:['latin'],variable:'--font-sans'})
+const notoSans = Noto_Sans({ subsets: ['latin'], variable: '--font-sans' })
 
 const fontMono = Geist_Mono({
   subsets: ["latin"],
