@@ -1,7 +1,9 @@
 import { AuthLayout } from "@/components/auth/auth-layout";
 import { VerifyEmailForm } from "@/components/auth/verify-email-form";
 import { AuthIcon } from "@/components/auth/auth-icon";
+import { AuthSkeleton } from "@/components/auth/auth-skeleton";
 import { MailCheck } from "lucide-react";
+import { Suspense } from "react";
 
 export default function VerifyEmailPage() {
   return (
@@ -21,7 +23,9 @@ export default function VerifyEmailPage() {
           </p>
         </div>
 
-        <VerifyEmailForm />
+        <Suspense fallback={<AuthSkeleton />}>
+          <VerifyEmailForm />
+        </Suspense>
       </div>
     </AuthLayout>
   );

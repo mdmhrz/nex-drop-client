@@ -1,7 +1,9 @@
 import { AuthLayout } from "@/components/auth/auth-layout";
 import { ResetPasswordForm } from "@/components/auth/reset-password-form";
 import { AuthIcon } from "@/components/auth/auth-icon";
+import { ResetPasswordSkeleton } from "@/components/auth/auth-skeleton";
 import { Lock } from "lucide-react";
+import { Suspense } from "react";
 
 export default function ResetPasswordPage() {
   return (
@@ -21,7 +23,9 @@ export default function ResetPasswordPage() {
           </p>
         </div>
 
-        <ResetPasswordForm />
+        <Suspense fallback={<ResetPasswordSkeleton />}>
+          <ResetPasswordForm />
+        </Suspense>
       </div>
     </AuthLayout>
   );
