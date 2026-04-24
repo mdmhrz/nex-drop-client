@@ -1,18 +1,25 @@
 import { Geist_Mono, Noto_Sans, Outfit } from "next/font/google"
 
 import "./globals.css"
+import "./src/lib/env"
 
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 
-const outfitHeading = Outfit({ subsets: ['latin'], variable: '--font-heading' });
-
-const notoSans = Noto_Sans({ subsets: ['latin'], variable: '--font-sans' })
-
 const fontMono = Geist_Mono({
-  subsets: ["latin"],
   variable: "--font-mono",
+  subsets: ["latin"],
+})
+
+const notoSans = Noto_Sans({
+  variable: "--font-sans",
+  subsets: ["latin"],
+})
+
+const outfitHeading = Outfit({
+  variable: "--font-heading",
+  subsets: ["latin"],
 })
 
 export default function RootLayout({
@@ -24,7 +31,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn("antialiased", fontMono.variable, "font-sans", notoSans.variable, outfitHeading.variable)}
+      className={cn("antialiased", fontMono.variable, notoSans.variable, outfitHeading.variable)}
     >
       <body>
         <ThemeProvider>
