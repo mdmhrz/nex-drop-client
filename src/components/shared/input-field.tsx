@@ -14,6 +14,7 @@ interface InputFieldProps extends Omit<React.InputHTMLAttributes<HTMLInputElemen
   containerClassName?: string;
   showPasswordToggle?: boolean;
   field?: ControllerRenderProps<FieldValues, string>;
+  defaultLabelUp?: boolean;
 }
 
 export function InputField({
@@ -27,12 +28,13 @@ export function InputField({
   type,
   showPasswordToggle = false,
   field,
+  defaultLabelUp = false,
   ...props
 }: InputFieldProps) {
   const [isFocused, setIsFocused] = React.useState(false);
   const [showPassword, setShowPassword] = React.useState(false);
-  const [hasContent, setHasContent] = React.useState(false);
-  const [isLabelUp, setIsLabelUp] = React.useState(false);
+  const [hasContent, setHasContent] = React.useState(defaultLabelUp);
+  const [isLabelUp, setIsLabelUp] = React.useState(defaultLabelUp);
   const inputId = React.useId();
   const internalRef = React.useRef<HTMLInputElement>(null);
 

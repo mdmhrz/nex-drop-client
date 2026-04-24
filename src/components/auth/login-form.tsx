@@ -9,20 +9,25 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { SubmitButton } from "@/components/shared/submit-button";
 import { SocialLogin } from "@/components/auth/social-login";
 import { Mail, Lock, ArrowRight } from "lucide-react";
+import { toast } from "sonner";
+import { authService, LoginData } from "@/services/auth.service";
+import { useRouter } from "next/navigation";
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
+  password: z.string().min(1, "Password is required"),
   rememberMe: z.boolean().optional(),
 });
 
 type LoginFormData = z.infer<typeof loginSchema>;
 
 export function LoginForm() {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
-    formState: { errors, isValid },
+    watch,
+    formState: { errors, isValid, isSubmitting },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     mode: "onChange",
@@ -33,9 +38,31 @@ export function LoginForm() {
     },
   });
 
-  const onSubmit = (data: LoginFormData) => {
-    // TODO: Implement login logic
-    console.log(data);
+  const email = watch("email");
+
+  const onSubmit = async (data: LoginFormData) => {
+    const toastId = toast.loading("Signing in...");
+
+    try {
+      const response = await authService.login(data as LoginData);
+
+      if (response.success) {
+        toast.success(response.message || "Login successful!", { id: toastId });
+        // Redirect to dashboard
+        router.push("/dashboard");
+      }
+    } catch (error: unknown) {
+      const errorMessage = (error as { message?: string })?.message || "Login failed. Please try again.";
+      toast.error(errorMessage, { id: toastId });
+    }
+  };
+
+  const handleResendVerification = () => {
+    if (email) {
+      router.push(`/verify-email?email=${encodeURIComponent(email)}`);
+    } else {
+      toast.error("Please enter your email address first");
+    }
   };
 
   return (
@@ -72,10 +99,20 @@ export function LoginForm() {
           </Link>
         </div>
 
-        <SubmitButton icon={ArrowRight} iconPosition="right" disabled={!isValid}>
+        <SubmitButton icon={ArrowRight} iconPosition="right" disabled={!isValid} isPending={isSubmitting}>
           Sign in
         </SubmitButton>
       </form>
+
+      <div className="text-center text-sm">
+        <button
+          type="button"
+          onClick={handleResendVerification}
+          className="text-muted-foreground hover:text-primary transition-colors"
+        >
+          Need to verify your email?
+        </button>
+      </div>
     </div>
   );
 }

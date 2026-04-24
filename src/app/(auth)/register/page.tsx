@@ -1,5 +1,7 @@
 import { RegisterForm } from "@/components/auth/register-form";
 import { AuthLayout } from "@/components/auth/auth-layout";
+import { AuthIcon } from "@/components/auth/auth-icon";
+import { UserPlus } from "lucide-react";
 
 export default function RegisterPage() {
   return (
@@ -10,6 +12,8 @@ export default function RegisterPage() {
       backButtonHref="/login"
     >
       <div className="space-y-6">
+        <AuthIcon icon={UserPlus} />
+
         <div className="space-y-2 text-center">
           <h1 className="text-2xl font-bold">Create an account</h1>
           <p className="text-sm text-muted-foreground">

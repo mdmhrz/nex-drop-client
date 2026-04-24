@@ -1,5 +1,7 @@
 import { LoginForm } from "@/components/auth/login-form";
 import { AuthLayout } from "@/components/auth/auth-layout";
+import { AuthIcon } from "@/components/auth/auth-icon";
+import { LogIn } from "lucide-react";
 
 export default function LoginPage() {
     return (
@@ -10,6 +12,8 @@ export default function LoginPage() {
             backButtonHref="/register"
         >
             <div className="space-y-6">
+                <AuthIcon icon={LogIn} />
+
                 <div className="space-y-2 text-center">
                     <h1 className="text-2xl font-bold">Welcome back</h1>
                     <p className="text-sm text-muted-foreground">

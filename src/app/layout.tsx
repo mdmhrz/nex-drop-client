@@ -3,6 +3,7 @@ import { Geist_Mono, Noto_Sans, Outfit } from "next/font/google"
 import "./globals.css"
 
 import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 
 const outfitHeading = Outfit({ subsets: ['latin'], variable: '--font-heading' });
@@ -26,7 +27,10 @@ export default function RootLayout({
       className={cn("antialiased", fontMono.variable, "font-sans", notoSans.variable, outfitHeading.variable)}
     >
       <body>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          {children}
+          <Toaster position="top-right" richColors />
+        </ThemeProvider>
       </body>
     </html>
   )
