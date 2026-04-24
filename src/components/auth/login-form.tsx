@@ -57,11 +57,24 @@ export function LoginForm() {
     }
   };
 
-  const handleResendVerification = () => {
-    if (email) {
-      router.push(`/verify-email?email=${encodeURIComponent(email)}`);
-    } else {
+  const handleResendVerification = async () => {
+    if (!email) {
       toast.error("Please enter your email address first");
+      return;
+    }
+
+    const toastId = toast.loading("Resending verification email...");
+
+    try {
+      const response = await authService.resendOtp(email);
+
+      if (response.success) {
+        toast.success(response.message || "Verification email sent!", { id: toastId });
+        router.push(`/verify-email?email=${encodeURIComponent(email)}`);
+      }
+    } catch (error: unknown) {
+      const errorMessage = (error as { message?: string })?.message || "Failed to resend verification email";
+      toast.error(errorMessage, { id: toastId });
     }
   };
 
