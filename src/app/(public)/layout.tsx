@@ -7,7 +7,7 @@ export default function PublicLayout({
 }) {
   return (
     <div className="min-h-screen">
-      {/* Public header can be added here */}
+      {/* Public header can be added   here */}
       <main>{children}</main>
       {/* Public footer can be added here */}
     </div>
