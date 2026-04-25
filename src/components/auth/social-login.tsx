@@ -9,8 +9,7 @@ interface SocialLoginProps {
 
 export function SocialLogin({ redirectPath }: SocialLoginProps) {
   const handleGoogleLogin = async () => {
-    // TODO: Implement Google login logic
-    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000";
+    const baseUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL || "http://localhost:5000";
     const googleAuthUrl = `${baseUrl}/api/v1/auth/login/google`;
     const defaultRedirect = "/dashboard";
 

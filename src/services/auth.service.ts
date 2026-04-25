@@ -1,4 +1,3 @@
-import { api } from "@/lib/apiClient";
 import { authApi } from "@/lib/authClient";
 
 export interface RegisterData {
