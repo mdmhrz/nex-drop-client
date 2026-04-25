@@ -5,6 +5,7 @@ import "../lib/env"
 
 
 import { ThemeProvider } from "@/provider/theme-provider";
+import { ReactQueryProvider } from "@/provider/react-query-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 
@@ -31,8 +32,10 @@ export default function RootLayout({
     >
       <body>
         <ThemeProvider>
-          {children}
-          <Toaster position="top-right" richColors />
+          <ReactQueryProvider>
+            {children}
+            <Toaster position="top-right" richColors />
+          </ReactQueryProvider>
         </ThemeProvider>
       </body>
     </html>

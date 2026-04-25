@@ -43,7 +43,7 @@ function NavItems({
             {section.title && collapsed && (
               <div className="mx-auto my-2 h-px w-6 bg-border" />
             )}
-            <div className="space-y-0.5">
+            <div className="space-y-3 mb-8">
               {section.items.map((item) => {
                 const Icon = item.icon;
                 const isDashboardRoot =

@@ -15,7 +15,7 @@ This document provides a complete guide to the authentication and authorization 
 
 ### Core Components
 
-1. **middleware.ts** - Next.js middleware for request interception
+1. **proxy.ts** - Next.js middleware for request interception
 2. **lib/authUtils.ts** - Route configuration and access control logic
 3. **lib/jwtUtils.ts** - JWT token verification and decoding
 4. **lib/tokenUtils.ts** - Token expiry and time utilities
