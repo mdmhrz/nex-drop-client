@@ -53,7 +53,7 @@ export function Banner() {
     const slide = slides[index];
 
     return (
-        <section className="relative w-full overflow-hidden rounded-2xl">
+        <section className="relative w-full overflow-hidden rounded-2xl max-w-7xl mx-auto">
             {/* ── Code-built background ── */}
             <div className="absolute inset-0 bg-[#faf9ee]" />
             <div className="banner-bg-diagonal absolute inset-0 bg-primary/50" />
