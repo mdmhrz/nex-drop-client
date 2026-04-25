@@ -22,7 +22,7 @@ export function AuthLayout({
   return (
     <div className="min-h-screen flex">
       {/* Left Side - Branding Panel */}
-      <div className="hidden lg:block lg:w-1/2">
+      <div className="hidden lg:block lg:w-1/2 bg-[#03373D]">
         <AuthSidePanel title={leftSideTitle} description={leftSideDescription} />
       </div>
 

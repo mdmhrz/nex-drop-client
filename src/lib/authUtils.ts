@@ -14,7 +14,7 @@ export const authRoutes = [
 /**
  * Public routes accessible to everyone
  */
-export const publicRoutes = ["/", "/about", "/contact", "/help"];
+export const publicRoutes = ["/", "/about", "/contact", "/coverage", "/be-a-rider", "/help"];
 
 /**
  * Check if a route is an authentication route
@@ -44,7 +44,7 @@ export type RouteConfig = {
  * Common routes accessible to all authenticated users
  */
 export const commonProtectedRoutes: RouteConfig = {
-    exact: ["/my-profile", "/change-password", "/settings"],
+    exact: ["/my-profile", "/change-password", "/settings", "/track-order"],
     pattern: [],
 };
 

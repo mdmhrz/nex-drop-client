@@ -32,6 +32,16 @@ export async function proxy(request: NextRequest) {
     console.log(`Is Auth Route: ${authRoute}`);
     console.log(`Is Valid Token: ${isValidAccessToken}`);
 
+    // Be a Rider: public route but blocked for riders
+    if (pathname === "/be-a-rider" || pathname.startsWith("/be-a-rider/")) {
+        if (isValidAccessToken && userRole === "RIDER") {
+            return NextResponse.redirect(
+                new URL(getDefaultDashboardRoute(userRole), request.url)
+            );
+        }
+        return NextResponse.next();
+    }
+
     // Verify Email Page
     if (pathname === "/verify-email") {
         if (!isValidAccessToken) {
