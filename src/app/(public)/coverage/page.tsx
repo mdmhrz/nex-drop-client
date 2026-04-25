@@ -1,5 +1,5 @@
 import { SectionWrapper } from "@/components/home/section-wrapper";
-import CoverageMap from "@/components/coverage/coverage-map";
+import CoverageMap from "@/components/coverage/coverage-map-dynamic";
 import { Card } from "@/components/ui/card";
 
 export default function CoveragePage() {

@@ -48,7 +48,7 @@ const tabsData = [
 export default function AboutPage() {
     return (
         <SectionWrapper>
-            <div className="space-y-12 pt-0 md:pt-10 ">
+            <div className="space-y-12 pt-10 ">
                 {/* Header Section - Left Aligned */}
                 <div className="space-y-4">
                     <h1 className="section-heading-text text-4xl md:text-5xl font-bold tracking-tight">

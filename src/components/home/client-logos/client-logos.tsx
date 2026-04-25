@@ -27,7 +27,7 @@ export function ClientLogos() {
     const scrollingLogos = [...logos, ...logos];
 
     return (
-        <section className="px-6 lg:px-0">
+        <section className="px-6 lg:px-0 pt-6 md:pt-10 lg:pt-16">
             {/* Simple Heading */}
             <div className="mx-auto max-w-6xl text-center">
                 <h2 className="text-2xl font-bold tracking-tight section-heading-text">

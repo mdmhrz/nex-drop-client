@@ -1,12 +1,15 @@
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
-
 import { NavMenu } from "@/components/home/navbar/nav-menu";
 import { NavigationSheet } from "@/components/home/navbar/navigation-sheet";
 import { Logo } from "@/components/shared/logo";
-import Link from "next/link";
+import { getCurrentUser } from "@/lib/auth";
+import { getDashboardHref } from "@/components/home/navbar/nav-items";
 
-const Navbar = () => {
-
+const Navbar = async () => {
+  const user = await getCurrentUser();
+  const isLoggedIn = !!user;
+  const dashboardHref = user ? getDashboardHref(user.role) : "/dashboard";
 
   return (
     <nav className="fixed z-40 inset-x-4 top-6 mx-auto h-16 max-w-(--breakpoint-xl) rounded-full border bg-background">
@@ -14,25 +17,26 @@ const Navbar = () => {
         <Logo />
 
         {/* Desktop Menu */}
-        <NavMenu className="hidden md:block" />
+        <NavMenu
+          className="hidden md:block"
+          isLoggedIn={isLoggedIn}
+          role={user?.role}
+        />
 
         <div className="flex items-center gap-3">
-          <Link href="/login" className="hidden sm:inline-flex">
-            <Button
-              className="hidden rounded-full "
-              variant="outline"
-            >
-              Sign In
-            </Button>
-          </Link>
-
-          <Link href="/register">
-            <Button className="rounded-full">Get Started</Button>
-          </Link>
+          {isLoggedIn ? (
+            <Link href={dashboardHref}>
+              <Button className="rounded-full">Dashboard</Button>
+            </Link>
+          ) : (
+            <Link href="/register">
+              <Button className="rounded-full">Get Started</Button>
+            </Link>
+          )}
 
           {/* Mobile Menu */}
           <div className="md:hidden">
-            <NavigationSheet />
+            <NavigationSheet isLoggedIn={isLoggedIn} role={user?.role} />
           </div>
         </div>
       </div>

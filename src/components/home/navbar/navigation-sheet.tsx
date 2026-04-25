@@ -9,8 +9,14 @@ import {
 } from "@/components/ui/sheet";
 import { Logo } from "@/components/shared/logo";
 import { NavMenu } from "@/components/home/navbar/nav-menu";
+import type { UserRole } from "@/components/home/navbar/nav-items";
 
-export const NavigationSheet = () => {
+interface NavigationSheetProps {
+  isLoggedIn?: boolean;
+  role?: UserRole;
+}
+
+export const NavigationSheet = ({ isLoggedIn = false, role }: NavigationSheetProps) => {
   return (
     <Sheet>
       <VisuallyHidden>
@@ -24,7 +30,12 @@ export const NavigationSheet = () => {
       </SheetTrigger>
       <SheetContent className="px-6 py-3">
         <Logo />
-        <NavMenu className="mt-6 [&>div]:h-full" orientation="vertical" />
+        <NavMenu
+          className="mt-6 [&>div]:h-full"
+          orientation="vertical"
+          isLoggedIn={isLoggedIn}
+          role={role}
+        />
       </SheetContent>
     </Sheet>
   );

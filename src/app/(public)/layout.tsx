@@ -9,9 +9,11 @@ export default function PublicLayout({
 }) {
   return (
     <div className="min-h-screen">
-      <Navbar/>
+      <div className="relavtive z-50 py-5">
+        <Navbar />
+      </div>
       <main>{children}</main>
-      <Footer/>
+      <Footer />
     </div>
   );
 }
