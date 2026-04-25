@@ -13,6 +13,10 @@
   font-family: "Nevera", sans-serif;
 }
 
+.banner-bg-diagonal {
+  clip-path: polygon(0% 100%, 100% 45%, 100% 100%);
+}
+
 @custom-variant dark (&:is(.dark *));
 
 :root {

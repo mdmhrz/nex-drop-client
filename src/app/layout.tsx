@@ -4,7 +4,7 @@ import "./globals.css"
 import "../lib/env"
 // changes applied here
 
-import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeProvider } from "@/provider/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 
