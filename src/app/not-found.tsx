@@ -1,78 +1,56 @@
 import Link from "next/link";
-import { PackageX, Home, Search, ArrowLeft } from "lucide-react";
+import { LayoutDashboard, Home, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { Logo } from "@/components/shared/logo";
 
 export default function NotFound() {
     return (
         <div className="min-h-screen flex flex-col items-center justify-center bg-background px-6 py-16">
-            {/* Logo */}
             <div className="mb-12">
                 <Logo />
             </div>
 
-            {/* Main content */}
-            <div className="flex flex-col items-center text-center max-w-md gap-6">
-                {/* Parcel icon with pulse ring */}
-                <div className="relative">
-                    <div className="absolute inset-0 rounded-full bg-primary/10 animate-ping" />
-                    <div className="relative flex h-24 w-24 items-center justify-center rounded-full bg-primary/10 border border-primary/20">
-                        <PackageX className="h-10 w-10 text-primary" strokeWidth={1.5} />
+            <div className="flex flex-col items-center text-center max-w-lg gap-6">
+                {/* Large 404 with icon overlay */}
+                <div className="relative select-none leading-none">
+                    <span className="text-[9rem] md:text-[12rem] font-bold tracking-tighter text-muted/40 dark:text-muted/20">
+                        404
+                    </span>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 border border-primary/20">
+                            <LayoutDashboard className="h-7 w-7 text-primary" strokeWidth={1.5} />
+                        </div>
                     </div>
                 </div>
 
-                {/* Error badge */}
-                <Badge variant="outline" className="border-primary/30 text-primary text-xs px-3 py-1">
-                    Error 404
-                </Badge>
-
-                {/* Heading */}
-                <div className="space-y-2">
-                    <h1 className="section-heading-text text-4xl md:text-5xl font-bold tracking-tight">
-                        Parcel Not Found
+                {/* Text */}
+                <div className="space-y-3">
+                    <h1 className="section-heading-text text-3xl md:text-4xl font-bold tracking-tight">
+                        Page Not Found
                     </h1>
-                    <p className="text-muted-foreground text-base leading-relaxed">
-                        Looks like this parcel got lost along the way. The page you&apos;re looking for doesn&apos;t exist or may have been moved.
+                    <p className="text-muted-foreground text-base leading-relaxed max-w-sm">
+                        The page you&apos;re looking for doesn&apos;t exist in this system.
+                        It may have been moved, renamed, or the URL might be incorrect.
                     </p>
                 </div>
 
-                {/* Tracking code style error info */}
-                <div className="w-full rounded-lg border border-border bg-muted/40 px-4 py-3 text-sm text-left">
-                    <div className="flex items-center justify-between">
-                        <span className="text-muted-foreground">Route</span>
-                        <span className="font-mono text-destructive">URL not found</span>
-                    </div>
-                    <Separator className="my-2" />
-                    <div className="flex items-center justify-between">
-                        <span className="text-muted-foreground">Status</span>
-                        <Badge variant="destructive" className="text-[10px]">404</Badge>
-                    </div>
-                    <Separator className="my-2" />
-                    <div className="flex items-center justify-between">
-                        <span className="text-muted-foreground">Resolution</span>
-                        <span className="text-primary text-xs font-medium">Return to homepage</span>
-                    </div>
-                </div>
-
-                {/* CTA buttons */}
-                <div className="flex flex-col sm:flex-row gap-3 w-full">
-                    <Button asChild className="flex-1 gap-2">
+                {/* CTAs */}
+                <div className="flex flex-col sm:flex-row gap-3 w-full pt-2">
+                    <Button asChild className="flex-1 rounded-full gap-2">
                         <Link href="/">
                             <Home className="h-4 w-4" />
                             Back to Home
                         </Link>
                     </Button>
-                    <Button variant="outline" asChild className="flex-1 gap-2">
-                        <Link href="/track-order">
-                            <Search className="h-4 w-4" />
-                            Track a Parcel
+                    <Button variant="outline" asChild className="flex-1 rounded-full gap-2">
+                        <Link href="/dashboard">
+                            <LayoutDashboard className="h-4 w-4" />
+                            Go to Dashboard
                         </Link>
                     </Button>
                 </div>
 
-                <Button variant="ghost" asChild className="text-muted-foreground gap-2 text-sm">
+                <Button variant="ghost" size="sm" asChild className="text-muted-foreground gap-2">
                     <Link href="javascript:history.back()">
                         <ArrowLeft className="h-4 w-4" />
                         Go back
@@ -82,3 +60,5 @@ export default function NotFound() {
         </div>
     );
 }
+
+
