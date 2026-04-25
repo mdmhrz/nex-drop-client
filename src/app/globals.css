@@ -1,6 +1,9 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
+@import "swiper/css";
+@import "swiper/css/navigation";
+@import "swiper/css/pagination";
 
 @font-face {
   font-family: "Nevera";
@@ -11,6 +14,10 @@
 
 .font-nevera {
   font-family: "Nevera", sans-serif;
+}
+
+.banner-bg-diagonal {
+  clip-path: polygon(0% 100%, 100% 45%, 100% 100%);
 }
 
 @custom-variant dark (&:is(.dark *));
@@ -39,6 +46,7 @@
   --chart-3: oklch(0.648 0.2 131.684);
   --chart-4: oklch(0.532 0.157 131.589);
   --chart-5: oklch(0.453 0.124 130.933);
+  --section-heading: #03373D;
   --radius: 0.625rem;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
@@ -74,6 +82,7 @@
   --chart-3: oklch(0.648 0.2 131.684);
   --chart-4: oklch(0.532 0.157 131.589);
   --chart-5: oklch(0.453 0.124 130.933);
+  --section-heading: #FFFFFF;
   --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
   --sidebar-primary: oklch(0.768 0.233 130.85);
@@ -82,6 +91,67 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+}
+
+.section-heading-text {
+  color: var(--section-heading);
+}
+
+.section-divider {
+  border-color: var(--section-heading);
+  opacity: 0.6;
+}
+
+.logo-adaptive {
+  filter: brightness(1);
+  transition: filter 0.3s ease;
+}
+
+.dark .logo-adaptive {
+  filter: brightness(0) invert(1);
+}
+
+.merchant-bg {
+  background-color: #03373D;
+  color: white;
+}
+
+.svg-adaptive {
+  filter: brightness(1);
+  transition: filter 0.3s ease;
+}
+
+.dark .svg-adaptive {
+  filter: brightness(0) invert(1);
+}
+
+.testimonials-pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.testimonials-pagination .swiper-pagination-bullet {
+  width: 12px !important;
+  height: 12px !important;
+  background-color: #d1d5db !important;
+  opacity: 0.6 !important;
+  transition: all 0.3s ease !important;
+}
+
+.testimonials-pagination .swiper-pagination-bullet-active {
+  background-color: var(--primary) !important;
+  opacity: 1 !important;
+  width: 32px !important;
+  border-radius: 6px !important;
+}
+
+.dark .testimonials-pagination .swiper-pagination-bullet {
+  background-color: #4b5563 !important;
+}
+
+.dark .testimonials-pagination .swiper-pagination-bullet-active {
+  background-color: var(--primary) !important;
 }
 
 @theme inline {

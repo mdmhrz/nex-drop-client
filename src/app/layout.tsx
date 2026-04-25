@@ -1,24 +1,19 @@
-import { Geist_Mono, Noto_Sans, Outfit } from "next/font/google"
+import { Urbanist } from "next/font/google"
 
 import "./globals.css"
 import "../lib/env"
-// changes applied here
 
-import { ThemeProvider } from "@/components/theme-provider";
+
+import { ThemeProvider } from "@/provider/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 
-const fontMono = Geist_Mono({
-  variable: "--font-mono",
-  subsets: ["latin"],
-})
-
-const notoSans = Noto_Sans({
+const urbanist = Urbanist({
   variable: "--font-sans",
   subsets: ["latin"],
 })
 
-const outfitHeading = Outfit({
+const urbanistHeading = Urbanist({
   variable: "--font-heading",
   subsets: ["latin"],
 })
@@ -32,7 +27,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn("antialiased", fontMono.variable, notoSans.variable, outfitHeading.variable)}
+      className={cn("antialiased", urbanist.variable, urbanistHeading.variable)}
     >
       <body>
         <ThemeProvider>

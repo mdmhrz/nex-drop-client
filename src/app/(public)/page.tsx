@@ -1,22 +1,27 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-
+import Navbar from "@/components/home/navbar/navbar";
+import { Banner } from "@/components/home/banner";
+import { HowItWorks } from "@/components/home/how-it-works/how-it-works";
+import { OurServices } from "@/components/home/our-services/our-services";
+import { Features } from "@/components/home/features/features";
+import { ClientLogos } from "@/components/home/client-logos/client-logos";
+import { BecomeAMerchant } from "@/components/home/become-a-merchant/become-a-merchant";
+import Testimonials from "@/components/home/testimonials/testimonials";
+import FaqSection from "@/components/home/faq/faq";
+import Footer from "@/components/home/footer/footer";
 
 export default function Page() {
   return (
-    <div className="flex min-h-svh p-6">
-      <div className="flex max-w-md min-w-0 flex-col gap-4 text-sm leading-loose">
-        <div>
-          <h1 className="font-medium">Project ready!</h1>
-          <p>You may now add components and start building.</p>
-          <p>We&apos;ve already added the button component for you.</p>
-          <Button className="mt-2">Button</Button>
-          <Badge variant={"destructive"} className="mt-2">Badge</Badge>
-        </div>
-        <div className="font-mono text-xs text-muted-foreground">
-          (Press <kbd>d</kbd> to toggle dark mode)
-        </div>
-      </div>
+    <div className="flex min-h-svh flex-col px-6 lg:px-0 pt-28">
+      <Navbar />
+      <Banner />
+      <HowItWorks />
+      <OurServices />
+      <ClientLogos />
+      <Features />
+      <BecomeAMerchant />
+      <Testimonials />
+      <FaqSection />
+      <Footer />
     </div>
-  )
+  );
 }
