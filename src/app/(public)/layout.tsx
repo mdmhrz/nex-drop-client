@@ -1,3 +1,5 @@
+import Footer from "@/components/home/footer/footer";
+import Navbar from "@/components/home/navbar/navbar";
 import { ReactNode } from "react";
 
 export default function PublicLayout({
@@ -7,9 +9,9 @@ export default function PublicLayout({
 }) {
   return (
     <div className="min-h-screen">
-      {/* Public header can be added   here */}
+      <Navbar/>
       <main>{children}</main>
-      {/* Public footer can be added here */}
+      <Footer/>
     </div>
   );
 }
