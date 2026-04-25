@@ -2,6 +2,12 @@ import Navbar from "@/components/home/navbar/navbar";
 import { Banner } from "@/components/home/banner";
 import { HowItWorks } from "@/components/home/how-it-works/how-it-works";
 import { OurServices } from "@/components/home/our-services/our-services";
+import { Features } from "@/components/home/features/features";
+import { ClientLogos } from "@/components/home/client-logos/client-logos";
+import { BecomeAMerchant } from "@/components/home/become-a-merchant/become-a-merchant";
+import Testimonials from "@/components/home/testimonials/testimonials";
+import FaqSection from "@/components/home/faq/faq";
+import Footer from "@/components/home/footer/footer";
 
 export default function Page() {
   return (
@@ -10,6 +16,12 @@ export default function Page() {
       <Banner />
       <HowItWorks />
       <OurServices />
+      <ClientLogos />
+      <Features />
+      <BecomeAMerchant />
+      <Testimonials />
+      <FaqSection />
+      <Footer />
     </div>
   );
 }

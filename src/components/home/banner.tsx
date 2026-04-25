@@ -60,7 +60,7 @@ export function Banner() {
             <div className="absolute -right-16 -top-16 h-64 w-64 rounded-full bg-primary/20 blur-3xl" />
 
             {/* ── Content row ── */}
-            <div className="relative flex flex-col sm:h-85 sm:flex-row md:h-95 lg:h-105">
+            <div className="relative flex flex-col h-80 sm:h-96 md:h-112 lg:h-128 sm:flex-row">
 
                 {/* Left: text column */}
                 <div className="flex w-full flex-col justify-center gap-5 px-6 py-10 sm:w-1/2 sm:py-0 sm:px-10 lg:px-16">

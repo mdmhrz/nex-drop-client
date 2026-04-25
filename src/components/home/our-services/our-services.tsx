@@ -45,7 +45,10 @@ const services = [
 
 export function OurServices() {
     return (
-        <SectionWrapper>
+        <SectionWrapper
+            hasPadding={false}
+            topPadding={false}
+        >
             {/* Section Header */}
             <SectionHeader
                 title="Our Services"

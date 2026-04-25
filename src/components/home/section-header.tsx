@@ -20,7 +20,7 @@ export function SectionHeader({
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
                 viewport={{ once: true }}
-                className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl md:text-5xl"
+                className="text-3xl font-bold tracking-tight section-heading-text sm:text-4xl md:text-5xl"
             >
                 {highlightWord ? (
                     <>
