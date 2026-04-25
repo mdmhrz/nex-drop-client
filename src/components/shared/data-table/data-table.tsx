@@ -187,6 +187,7 @@ export function DataTable<TData extends RowData>({
             sorting: sortingProp ? sortingProp.state : internalSorting,
             columnFilters,
             columnOrder,
+            ...(paginationProp ? { pagination: paginationProp.state } : {}),
         },
         // Sorting
         onSortingChange: sortingProp
@@ -210,12 +211,6 @@ export function DataTable<TData extends RowData>({
                             ? updater(paginationProp.state)
                             : updater;
                     paginationProp.onChange(next);
-                },
-                state: {
-                    sorting: sortingProp ? sortingProp.state : internalSorting,
-                    columnFilters,
-                    columnOrder,
-                    pagination: paginationProp.state,
                 },
             }
             : { getPaginationRowModel: getPaginationRowModel() }),
