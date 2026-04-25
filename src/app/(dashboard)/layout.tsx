@@ -1,20 +1,22 @@
 import { ReactNode } from "react";
-import { DashboardSidebar } from "@/components/layouts/dashboard/sidebar";
-import { DashboardHeader } from "@/components/layouts/dashboard/header";
+import { DashboardShell } from "@/components/layouts/dashboard/dashboard-shell";
+import { getCurrentUser } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
-
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
 }: {
   children: ReactNode;
 }) {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    redirect("/login");
+  }
+
   return (
-    <div className="flex min-h-screen">
-      <DashboardSidebar />
-      <div className="flex flex-1 flex-col">
-        <DashboardHeader />
-        <main className="flex-1 p-6">{children}</main>
-      </div>
-    </div>
+    <DashboardShell user={{ name: user.name, email: user.email, role: user.role }}>
+      {children}
+    </DashboardShell>
   );
 }

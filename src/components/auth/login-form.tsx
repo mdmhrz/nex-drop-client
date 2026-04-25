@@ -48,8 +48,20 @@ export function LoginForm() {
 
       if (response.success) {
         toast.success(response.message || "Login successful!", { id: toastId });
-        // Redirect to dashboard
-        router.push("/dashboard");
+        // Get user role from response and redirect accordingly
+        const userRole = response.data?.user?.role;
+        let redirectPath = "/dashboard"; // default
+
+        if (userRole === "RIDER") {
+          redirectPath = "/rider-dashboard";
+        } else if (userRole === "ADMIN" || userRole === "SUPER_ADMIN") {
+          redirectPath = "/admin-dashboard";
+        }
+
+        // Refresh page to pick up cookies set by backend, then redirect
+        setTimeout(() => {
+          window.location.href = redirectPath;
+        }, 500);
       }
     } catch (error: unknown) {
       const errorMessage = (error as { message?: string })?.message || "Login failed. Please try again.";

@@ -2,67 +2,139 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-import {
-  LayoutDashboard,
-  Package,
-  User,
-  Settings,
-  Truck,
-  DollarSign,
-  Users
-} from "lucide-react";
+import { getNavigationForRole } from "@/lib/navigationConfig";
+import { UserRole } from "@/lib/rbac";
+import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
+import { Logo } from "@/components/shared/logo";
 
-export function DashboardSidebar() {
+interface DashboardSidebarProps {
+  role: UserRole;
+  mobileOpen?: boolean;
+  onMobileClose?: () => void;
+}
+
+function NavItems({
+  role,
+  collapsed,
+  onNavigate,
+}: {
+  role: UserRole;
+  collapsed: boolean;
+  onNavigate?: () => void;
+}) {
   const pathname = usePathname();
-
-  // Determine which dashboard section we're in
-  const isCustomerDashboard = pathname.startsWith("/dashboard");
-  const isRiderDashboard = pathname.startsWith("/rider-dashboard");
-
-  const navigationItems = isCustomerDashboard ? [
-    { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-    { name: "Orders", href: "/dashboard/orders", icon: Package },
-    { name: "Profile", href: "/dashboard/profile", icon: User },
-    { name: "Settings", href: "/dashboard/settings", icon: Settings },
-  ] : isRiderDashboard ? [
-    { name: "Dashboard", href: "/rider-dashboard", icon: LayoutDashboard },
-    { name: "Deliveries", href: "/rider-dashboard/deliveries", icon: Truck },
-    { name: "Earnings", href: "/rider-dashboard/earnings", icon: DollarSign },
-    { name: "Profile", href: "/rider-dashboard/profile", icon: User },
-  ] : [
-    { name: "Dashboard", href: "/admin-dashboard", icon: LayoutDashboard },
-    { name: "Users", href: "/admin-dashboard/users", icon: Users },
-    { name: "Settings", href: "/admin-dashboard/settings", icon: Settings },
-  ];
+  const navigationSections = getNavigationForRole(role);
 
   return (
-    <aside className="w-64 border-r bg-card">
-      <div className="flex h-16 items-center border-b px-6">
-        <span className="font-bold text-xl">NexDrop</span>
-      </div>
-      <nav className="space-y-1 p-4">
-        {navigationItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
+    <TooltipProvider delayDuration={0}>
+      <nav className={cn("flex-1 overflow-y-auto py-4", collapsed ? "px-2" : "px-3")}>
+        {navigationSections.map((section, sectionIndex) => (
+          <div key={sectionIndex} className="mb-4">
+            {section.title && !collapsed && (
+              <h3 className="px-3 mb-1 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                {section.title}
+              </h3>
+            )}
+            {section.title && collapsed && (
+              <div className="mx-auto my-2 h-px w-6 bg-border" />
+            )}
+            <div className="space-y-0.5">
+              {section.items.map((item) => {
+                const Icon = item.icon;
+                const isDashboardRoot =
+                  item.href === "/dashboard" ||
+                  item.href === "/rider-dashboard" ||
+                  item.href === "/admin-dashboard";
 
-          return (
-            <Link
-              key={item.name}
-              href={item.href}
-              className={cn(
-                "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
-                isActive
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
-              )}
-            >
-              <Icon className="h-4 w-4" />
-              {item.name}
-            </Link>
-          );
-        })}
+                const isActive = isDashboardRoot
+                  ? pathname === item.href
+                  : pathname === item.href || pathname.startsWith(`${item.href}/`);
+
+                const linkEl = (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={onNavigate}
+                    className={cn(
+                      "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                      collapsed && "justify-center px-2",
+                      isActive
+                        ? "bg-primary text-primary-foreground"
+                        : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                    )}
+                  >
+                    <Icon className="h-4 w-4 shrink-0" />
+                    {!collapsed && <span className="truncate">{item.name}</span>}
+                  </Link>
+                );
+
+                if (collapsed) {
+                  return (
+                    <Tooltip key={item.href}>
+                      <TooltipTrigger asChild>{linkEl}</TooltipTrigger>
+                      <TooltipContent side="right">{item.name}</TooltipContent>
+                    </Tooltip>
+                  );
+                }
+                return linkEl;
+              })}
+            </div>
+          </div>
+        ))}
       </nav>
-    </aside>
+    </TooltipProvider>
+  );
+}
+
+export function DashboardSidebar({ role, mobileOpen, onMobileClose }: DashboardSidebarProps) {
+  const [collapsed, setCollapsed] = useState(false);
+
+  return (
+    <>
+      {/* Desktop sidebar */}
+      <aside
+        className={cn(
+          "hidden md:flex flex-col border-r bg-card transition-all duration-300 ease-in-out relative shrink-0",
+          collapsed ? "w-14" : "w-64"
+        )}
+      >
+        {/* Logo */}
+        <div className={cn("flex h-16 items-center border-b px-4 shrink-0", collapsed && "justify-center px-2")}>
+
+          <Logo showName={!collapsed} />
+        </div>
+
+        {/* Nav */}
+        <NavItems role={role} collapsed={collapsed} />
+
+        {/* Collapse toggle */}
+        <div className="shrink-0 border-t p-2 flex justify-end">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setCollapsed((v) => !v)}
+            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          >
+            {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+          </Button>
+        </div>
+      </aside>
+
+      {/* Mobile sheet */}
+      <Sheet open={mobileOpen} onOpenChange={(open) => !open && onMobileClose?.()}>
+        <SheetContent side="left" className="w-64 p-0 flex flex-col">
+          <SheetTitle className="sr-only">Navigation</SheetTitle>
+          <div className="flex h-16 items-center border-b px-6 shrink-0">
+            <span className="font-bold text-xl tracking-tight font-nevera">NexDrop</span>
+          </div>
+          <NavItems role={role} collapsed={false} onNavigate={onMobileClose} />
+        </SheetContent>
+      </Sheet>
+    </>
   );
 }
