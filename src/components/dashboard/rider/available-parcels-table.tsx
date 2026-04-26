@@ -3,14 +3,17 @@
 import { useState } from "react";
 import type { ColumnDef } from "@tanstack/react-table";
 import type { PaginationState } from "@tanstack/react-table";
-import { Badge } from "@/components/ui/badge";
 import { DataTable } from "@/components/shared/data-table";
 import { useAvailableParcels } from "@/hooks/use-available-parcels";
 import type { Parcel } from "@/services/parcel.service";
+import { StatusBadge } from "@/components/shared/status-badge";
+import { AcceptParcelModal } from "./accept-parcel-modal";
+import { TableActionDropdown } from "@/components/shared/table-action-dropdown";
+import { Check } from "lucide-react";
 
 // ─── Column definitions ───────────────────────────────────────────────────────
 
-const columns: ColumnDef<Parcel>[] = [
+const getColumns = (onAccept: (parcel: Parcel) => void): ColumnDef<Parcel>[] => [
     {
         accessorKey: "trackingId",
         header: "Tracking ID",
@@ -64,9 +67,9 @@ const columns: ColumnDef<Parcel>[] = [
         cell: ({ getValue }) => {
             const paid = getValue<string>() === "Paid";
             return (
-                <Badge variant={paid ? "default" : "secondary"}>
+                <StatusBadge status={paid ? "success" : "warning"} variant={"default"}>
                     {paid ? "Paid" : "Unpaid"}
-                </Badge>
+                </StatusBadge>
             );
         },
     },
@@ -83,6 +86,25 @@ const columns: ColumnDef<Parcel>[] = [
             </span>
         ),
     },
+    {
+        id: "actions",
+        header: () => <span className="sr-only">Actions</span>,
+        enableSorting: false,
+        cell: ({ row }) => {
+            const parcel = row.original;
+            return (
+                <TableActionDropdown
+                    actions={[
+                        {
+                            label: "Accept",
+                            icon: <Check className="size-4" />,
+                            onClick: () => onAccept(parcel),
+                        },
+                    ]}
+                />
+            );
+        },
+    },
 ];
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -92,25 +114,34 @@ export function AvailableParcelsTable() {
         pageIndex: 0,
         pageSize: 10,
     });
+    const [selectedParcel, setSelectedParcel] = useState<Parcel | null>(null);
 
     const { data, isLoading } = useAvailableParcels({
         page: pagination.pageIndex + 1, // API is 1-based
         limit: pagination.pageSize,
     });
 
+    const columns = getColumns(setSelectedParcel);
+
     return (
-        <DataTable
-            data={data?.data ?? []}
-            columns={columns}
-            isLoading={isLoading}
-            emptyMessage="No parcels available for pickup right now."
-            pagination={{
-                state: pagination,
-                onChange: setPagination,
-                pageCount: data?.meta.totalPages,
-                totalItems: data?.meta.total,
-            }}
-            
-        />
+        <>
+            <DataTable
+                data={data?.data ?? []}
+                columns={columns}
+                isLoading={isLoading}
+                emptyMessage="No parcels available for pickup right now."
+                pagination={{
+                    state: pagination,
+                    onChange: setPagination,
+                    pageCount: data?.meta.totalPages,
+                    totalItems: data?.meta.total,
+                }}
+            />
+            <AcceptParcelModal
+                parcel={selectedParcel}
+                open={!!selectedParcel}
+                onOpenChange={(open) => !open && setSelectedParcel(null)}
+            />
+        </>
     );
 }

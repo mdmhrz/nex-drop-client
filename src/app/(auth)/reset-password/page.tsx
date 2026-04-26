@@ -1,7 +1,7 @@
-import { AuthLayout } from "@/components/auth/auth-layout";
+import { AuthLayout } from "@/components/layouts/auth/auth-layout";
 import { ResetPasswordForm } from "@/components/auth/reset-password-form";
-import { AuthIcon } from "@/components/auth/auth-icon";
-import { ResetPasswordSkeleton } from "@/components/auth/auth-skeleton";
+import { AuthIcon } from "@/components/layouts/auth/auth-icon";
+import { ResetPasswordSkeleton } from "@/components/layouts/auth/auth-skeleton";
 import { Lock } from "lucide-react";
 import { Suspense } from "react";
 

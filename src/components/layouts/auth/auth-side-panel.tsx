@@ -11,7 +11,7 @@ import {
     BarChart3,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Logo } from "../shared/logo";
+import { Logo } from "../../shared/logo";
 
 const slides = [
     {
