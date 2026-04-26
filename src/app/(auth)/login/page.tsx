@@ -1,6 +1,6 @@
 import { LoginForm } from "@/components/auth/login-form";
-import { AuthLayout } from "@/components/auth/auth-layout";
-import { AuthIcon } from "@/components/auth/auth-icon";
+import { AuthLayout } from "@/components/layouts/auth/auth-layout";
+import { AuthIcon } from "@/components/layouts/auth/auth-icon";
 import { LogIn } from "lucide-react";
 
 export default function LoginPage() {

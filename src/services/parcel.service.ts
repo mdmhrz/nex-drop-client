@@ -53,6 +53,31 @@ export interface GetAvailableParcelsParams {
     limit?: number;
 }
 
+export interface GetAssignedParcelsParams {
+    page?: number;
+    limit?: number;
+}
+
+export interface AcceptParcelParams {
+    note?: string;
+}
+
+export interface AcceptParcelResponse {
+    success: boolean;
+    message: string;
+    data: Parcel;
+}
+
+export interface ParcelActionParams {
+    note?: string;
+}
+
+export interface ParcelActionResponse {
+    success: boolean;
+    message: string;
+    data: Parcel;
+}
+
 // ─── Service ─────────────────────────────────────────────────────────────────
 
 export const parcelService = {
@@ -61,5 +86,20 @@ export const parcelService = {
         return api.get<ParcelsResponse>("/parcels/available", {
             params: { page, limit },
         });
+    },
+    getAssignedParcels: (params: GetAssignedParcelsParams = {}): Promise<ParcelsResponse> => {
+        const { page = 1, limit = 10 } = params;
+        return api.get<ParcelsResponse>("/parcels/assigned", {
+            params: { page, limit },
+        });
+    },
+    acceptParcel: (id: string, params: AcceptParcelParams = {}): Promise<AcceptParcelResponse> => {
+        return api.patch<AcceptParcelResponse>(`/parcels/${id}/accept`, params);
+    },
+    pickParcel: (id: string, params: ParcelActionParams = {}): Promise<ParcelActionResponse> => {
+        return api.patch<ParcelActionResponse>(`/parcels/${id}/pick`, params);
+    },
+    deliverParcel: (id: string, params: ParcelActionParams = {}): Promise<ParcelActionResponse> => {
+        return api.patch<ParcelActionResponse>(`/parcels/${id}/deliver`, params);
     },
 };

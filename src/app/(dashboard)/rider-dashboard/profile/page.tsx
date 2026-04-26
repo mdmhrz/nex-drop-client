@@ -1,8 +1,21 @@
-export default function RiderProfilePage() {
+import { HydrationBoundary, dehydrate, QueryClient } from "@tanstack/react-query";
+import { api } from "@/lib/apiClient";
+import { RIDER_PROFILE_KEY } from "@/hooks/use-rider-profile";
+import { RiderProfileContent } from "@/components/dashboard/rider/rider-profile-content";
+
+
+
+export default async function RiderProfilePage() {
+    const queryClient = new QueryClient();
+
+    await queryClient.prefetchQuery({
+        queryKey: RIDER_PROFILE_KEY,
+        queryFn: () => api.get("/rider/me"),
+    });
+
     return (
-        <div>
-            <h1 className="text-2xl font-bold mb-4">Profile</h1>
-            <p className="text-muted-foreground">Edit your profile information.</p>
-        </div>
+        <HydrationBoundary state={dehydrate(queryClient)}>
+            <RiderProfileContent />
+        </HydrationBoundary>
     );
 }

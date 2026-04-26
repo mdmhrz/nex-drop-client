@@ -1,4 +1,5 @@
-import { AvailableParcelsTable } from "@/components/layouts/dashboard/rider/available-parcels-table";
+import { AvailableParcelsTable } from "@/components/dashboard/rider/available-parcels-table";
+
 
 export default function AvailableParcelsPage() {
     return (

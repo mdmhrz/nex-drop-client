@@ -1,6 +1,6 @@
-import { AuthLayout } from "@/components/auth/auth-layout";
+import { AuthLayout } from "@/components/layouts/auth/auth-layout";
 import { ForgotPasswordForm } from "@/components/auth/forgot-password-form";
-import { AuthIcon } from "@/components/auth/auth-icon";
+import { AuthIcon } from "@/components/layouts/auth/auth-icon";
 import { KeyRound } from "lucide-react";
 
 export default function ForgotPasswordPage() {
