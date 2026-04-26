@@ -19,6 +19,8 @@ import { parcelService, type AcceptParcelParams } from "@/services/parcel.servic
 import { AVAILABLE_PARCELS_KEY } from "@/hooks/use-available-parcels";
 import { toast } from "sonner";
 import type { Parcel } from "@/services/parcel.service";
+import { SubmitButton } from "@/components/shared/submit-button";
+import { Check } from "lucide-react";
 
 const acceptParcelSchema = z.object({
     note: z.string().optional(),
@@ -105,9 +107,14 @@ export function AcceptParcelModal({ parcel, open, onOpenChange }: AcceptParcelMo
                         <Button type="button" variant="outline" onClick={handleClose}>
                             Cancel
                         </Button>
-                        <Button type="submit" disabled={mutation.isPending}>
-                            {mutation.isPending ? "Accepting..." : "Accept Parcel"}
-                        </Button>
+                        <SubmitButton
+                            isPending={mutation.isPending}
+                            pendingLabel="Accepting..."
+                            icon={Check}
+                            type="submit"
+                        >
+                            Accept Parcel
+                        </SubmitButton>
                     </DialogFooter>
                 </form>
             </DialogContent>

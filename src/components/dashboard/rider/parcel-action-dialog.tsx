@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
     AlertDialog,
-    AlertDialogAction,
     AlertDialogCancel,
     AlertDialogContent,
     AlertDialogDescription,
@@ -18,6 +17,8 @@ import { parcelService, type ParcelActionParams } from "@/services/parcel.servic
 import { ASSIGNED_PARCELS_KEY } from "@/hooks/use-assigned-parcels";
 import { toast } from "sonner";
 import type { Parcel } from "@/services/parcel.service";
+import { SubmitButton } from "@/components/shared/submit-button";
+import { CheckCircle, Package } from "lucide-react";
 
 type ParcelAction = "pick" | "deliver";
 
@@ -34,6 +35,8 @@ const actionConfig = {
         description: (trackingId: string) =>
             `Confirm that you have picked up parcel ${trackingId} from the sender. This will change the status to "In Transit".`,
         buttonText: "Confirm Pickup",
+        pendingLabel: "Processing...",
+        icon: Package,
         apiCall: parcelService.pickParcel,
     },
     deliver: {
@@ -41,6 +44,8 @@ const actionConfig = {
         description: (trackingId: string) =>
             `Confirm that you have delivered parcel ${trackingId} to the recipient. This will complete the delivery.`,
         buttonText: "Confirm Delivery",
+        pendingLabel: "Processing...",
+        icon: CheckCircle,
         apiCall: parcelService.deliverParcel,
     },
 };
@@ -104,15 +109,17 @@ export function ParcelActionDialog({ parcel, action, open, onOpenChange }: Parce
                 </div>
                 <AlertDialogFooter>
                     <AlertDialogCancel disabled={mutation.isPending}>Cancel</AlertDialogCancel>
-                    <AlertDialogAction
+                    <SubmitButton
+                        isPending={mutation.isPending}
+                        pendingLabel={config.pendingLabel}
+                        icon={config.icon}
                         onClick={(e) => {
                             e.preventDefault();
                             handleConfirm();
                         }}
-                        disabled={mutation.isPending}
                     >
-                        {mutation.isPending ? "Processing..." : config.buttonText}
-                    </AlertDialogAction>
+                        {config.buttonText}
+                    </SubmitButton>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>
