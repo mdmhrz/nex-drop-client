@@ -52,7 +52,7 @@ export function ChartBarHorizontal({
                             tickFormatter={(value) => value.slice(0, 3)}
                         />
                         <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
-                        <Bar dataKey={xDataKey} fill="var(--color-chart-1)" radius={5} />
+                        <Bar dataKey={xDataKey} fill={config[xDataKey]?.color || "var(--color-chart-1)"} radius={5} />
                     </BarChart>
                 </ChartContainer>
             </CardContent>
