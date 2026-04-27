@@ -21,7 +21,6 @@ interface StatusBadgeProps {
     children?: React.ReactNode
     className?: string
     variant?: "default" | "secondary" | "destructive" | "outline" | "ghost" | "link"
-    showIcon?: boolean
 }
 
 const statusConfig: Record<string, { variant: StatusBadgeProps["variant"]; className: string; label?: string }> = {
@@ -56,7 +55,6 @@ export function StatusBadge({
     children,
     className,
     variant: overrideVariant,
-    showIcon = false
 }: StatusBadgeProps) {
     const normalizedStatus = normalizeStatus(status)
     const config = statusConfig[normalizedStatus] || {

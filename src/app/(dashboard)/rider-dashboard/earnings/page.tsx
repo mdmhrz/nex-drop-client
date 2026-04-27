@@ -1,7 +1,6 @@
 import { HydrationBoundary, dehydrate, QueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/apiClient";
 import { EARNINGS_KEY } from "@/hooks/use-earnings";
-import { EarningsTable } from "@/components/dashboard/rider/earnings-table";
 import { EarningsPageContent } from "@/components/dashboard/rider/earnings-page-content";
 
 export default async function RiderEarningsPage() {

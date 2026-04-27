@@ -70,7 +70,7 @@ export function UserDropdown({ user }: UserDropdownProps) {
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="icon" className="rounded-full">
-                        <UserAvatar name={user.name || user.email} email={user.email} />
+                        <UserAvatar name={user.name || user.email} />
                     </Button>
                 </DropdownMenuTrigger>
 

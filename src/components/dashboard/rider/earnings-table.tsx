@@ -40,7 +40,6 @@ const getColumns = (): ColumnDef<Earning>[] => [
             <div className="flex items-center gap-3">
                 <UserAvatar
                     name={row.original.parcel?.customer?.name ?? ""}
-                    email={row.original.parcel?.customer?.email}
                 />
                 <div className="space-y-0.5">
                     <p className="text-sm font-medium leading-none">{row.original.parcel?.customer?.name}</p>
