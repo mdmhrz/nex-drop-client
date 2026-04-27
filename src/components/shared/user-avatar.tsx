@@ -59,7 +59,7 @@ export function UserAvatar({ name, email, profilePhoto }: UserAvatarProps) {
                 </TooltipTrigger>
                 <TooltipContent side="bottom" align="center">
                     <p className="font-medium">{name}</p>
-                    {email && <p className="text-xs text-muted-foreground">{email}</p>}
+                    {/* {email && <p className="text-xs text-muted-foreground">{email}</p>} */}
                 </TooltipContent>
             </Tooltip>
         </TooltipProvider>

@@ -1,8 +1,22 @@
-export default function RiderEarningsPage() {
+import { HydrationBoundary, dehydrate, QueryClient } from "@tanstack/react-query";
+import { api } from "@/lib/apiClient";
+import { EARNINGS_KEY } from "@/hooks/use-earnings";
+import { EarningsTable } from "@/components/dashboard/rider/earnings-table";
+import { EarningsPageContent } from "@/components/dashboard/rider/earnings-page-content";
+
+export default async function RiderEarningsPage() {
+    const queryClient = new QueryClient();
+
+    await queryClient.prefetchQuery({
+        queryKey: [...EARNINGS_KEY, { page: 1, limit: 10 }],
+        queryFn: () => api.get("/rider/earnings/history", {
+            params: { page: 1, limit: 10 },
+        }),
+    });
+
     return (
-        <div>
-            <h1 className="text-2xl font-bold mb-4">Earnings</h1>
-            <p className="text-muted-foreground">View your earnings and cashout history.</p>
-        </div>
+        <HydrationBoundary state={dehydrate(queryClient)}>
+            <EarningsPageContent />
+        </HydrationBoundary>
     );
 }

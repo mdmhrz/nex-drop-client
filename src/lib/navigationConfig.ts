@@ -134,6 +134,13 @@ export const navigationConfig: Record<UserRole, NavigationSection[]> = {
                     description: "View earnings",
                 },
                 {
+                    name: "Cashouts",
+                    href: "/rider-dashboard/cashouts",
+                    icon: CreditCard,
+                    roles: ["RIDER"],
+                    description: "Manage cashouts",
+                },
+                {
                     name: "Ratings",
                     href: "/rider-dashboard/ratings",
                     icon: Star,
