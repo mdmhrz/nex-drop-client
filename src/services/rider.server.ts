@@ -144,3 +144,65 @@ export async function requestCashout(amount: number): Promise<CashoutRequestResp
         body: JSON.stringify({ amount }),
     });
 }
+
+export interface EarningParcel {
+    id: string;
+    trackingId: string;
+    price: number;
+    customer: {
+        id: string;
+        name: string;
+        email: string;
+    };
+}
+
+export interface Earning {
+    id: string;
+    riderId: string;
+    parcelId: string;
+    amount: number;
+    percentage: number;
+    status: "PENDING" | "PAID";
+    createdAt: string;
+    parcel: EarningParcel;
+}
+
+export interface EarningsMeta {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+    totalAmount: number;
+}
+
+export interface EarningsResponse {
+    success: boolean;
+    message: string;
+    data: Earning[];
+    meta: EarningsMeta;
+}
+
+export interface GetEarningsParams {
+    page?: number;
+    limit?: number;
+    status?: "PENDING" | "PAID" | "ALL";
+    startDate?: string;
+    endDate?: string;
+    search?: string;
+    sortBy?: string;
+    sortOrder?: "asc" | "desc";
+}
+
+export async function getEarnings(params: GetEarningsParams = {}): Promise<EarningsResponse> {
+    const searchParams = new URLSearchParams();
+    if (params.page) searchParams.set("page", params.page.toString());
+    if (params.limit) searchParams.set("limit", params.limit.toString());
+    if (params.status) searchParams.set("status", params.status);
+    if (params.startDate) searchParams.set("startDate", params.startDate);
+    if (params.endDate) searchParams.set("endDate", params.endDate);
+    if (params.search) searchParams.set("search", params.search);
+    if (params.sortBy) searchParams.set("sortBy", params.sortBy);
+    if (params.sortOrder) searchParams.set("sortOrder", params.sortOrder);
+
+    return serverFetch<EarningsResponse>(`/rider/earnings/history?${searchParams.toString()}`);
+}

@@ -133,15 +133,15 @@ export function CashoutsTable({ onRequestCashout }: CashoutsTableProps) {
             <div className="flex flex-wrap items-center gap-3">
                 {/* Status Filter */}
                 <div className="w-auto">
-                    <Select value={status} onValueChange={(value: "PENDING" | "APPROVED" | "REJECTED" |  "ALL") => setStatus(value)}>
-                        <SelectTrigger className="h-9">
+                    <Select value={status} onValueChange={(value: "PENDING" | "APPROVED" | "REJECTED" | "ALL") => setStatus(value)}>
+                        <SelectTrigger className="!h-9">
                             <SelectValue placeholder="All Status" />
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem value="ALL">All Status</SelectItem>
                             <SelectItem value="PENDING">Pending</SelectItem>
                             <SelectItem value="APPROVED">Approved</SelectItem>
-                          
+
                             <SelectItem value="REJECTED">Rejected</SelectItem>
                         </SelectContent>
                     </Select>
