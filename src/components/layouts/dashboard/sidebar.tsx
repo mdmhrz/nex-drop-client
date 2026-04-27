@@ -3,9 +3,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { getNavigationForRole } from "@/lib/navigationConfig";
+import { getNavigationForRole, getSettingsRouteForRole } from "@/lib/navigationConfig";
 import { UserRole } from "@/lib/rbac";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -28,7 +28,7 @@ function NavItems({
   onNavigate?: () => void;
 }) {
   const pathname = usePathname();
-  const navigationSections = getNavigationForRole(role);
+  const navigationSections = getNavigationForRole(UserRole[role] as UserRole);
 
   return (
     <TooltipProvider delayDuration={0}>
@@ -43,7 +43,7 @@ function NavItems({
             {section.title && collapsed && (
               <div className="mx-auto my-2 h-px w-6 bg-border" />
             )}
-            <div className="space-y-3 mb-8">
+            <div className="space-y-2 mb-8">
               {section.items.map((item) => {
                 const Icon = item.icon;
                 const isDashboardRoot =
@@ -61,7 +61,7 @@ function NavItems({
                     href={item.href}
                     onClick={onNavigate}
                     className={cn(
-                      "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                      "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
                       collapsed && "justify-center px-2",
                       isActive
                         ? "bg-primary text-primary-foreground"
@@ -93,13 +93,15 @@ function NavItems({
 
 export function DashboardSidebar({ role, mobileOpen, onMobileClose }: DashboardSidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
+  const pathname = usePathname();
+  const settingsRoute = getSettingsRouteForRole(UserRole[role] as UserRole);
 
   return (
     <>
       {/* Desktop sidebar */}
       <aside
         className={cn(
-          "hidden md:flex flex-col border-r bg-card transition-all duration-300 ease-in-out relative shrink-0",
+          "hidden md:flex flex-col border-r bg-card transition-all duration-300 ease-in-out relative shrink-0 sticky top-0 h-screen",
           collapsed ? "w-14" : "w-64"
         )}
       >
@@ -113,7 +115,40 @@ export function DashboardSidebar({ role, mobileOpen, onMobileClose }: DashboardS
         <NavItems role={role} collapsed={collapsed} />
 
         {/* Collapse toggle */}
-        <div className="shrink-0 border-t p-2 flex justify-end">
+        <div className="shrink-0 border-t p-2 flex justify-between">
+          {!collapsed ? (
+            <Link
+              href={settingsRoute}
+              className={cn(
+                "flex items-center gap-3 rounded-lg ml-1 w-full px-3 py-2 text-sm font-medium transition-colors",
+                pathname === settingsRoute
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
+              )}
+            >
+              <Settings className="h-4 w-4 shrink-0" />
+              <span>Settings</span>
+            </Link>
+          ) : (
+            <TooltipProvider delayDuration={0}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Link
+                    href={settingsRoute}
+                    className={cn(
+                      "flex items-center justify-center rounded-lg p-2 text-sm font-medium transition-colors",
+                      pathname === settingsRoute
+                        ? "bg-primary text-primary-foreground"
+                        : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                    )}
+                  >
+                    <Settings className="h-4 w-4 shrink-0" />
+                  </Link>
+                </TooltipTrigger>
+                <TooltipContent side="right">Settings</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
           <Button
             variant="ghost"
             size="icon"

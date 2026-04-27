@@ -5,6 +5,7 @@ import { DashboardSidebar } from "@/components/layouts/dashboard/sidebar";
 import { DashboardHeader } from "@/components/layouts/dashboard/header";
 import { UserRole } from "@/lib/rbac";
 
+
 interface DashboardShellProps {
     children: React.ReactNode;
     user: {
@@ -24,7 +25,7 @@ export function DashboardShell({ children, user }: DashboardShellProps) {
                 mobileOpen={mobileOpen}
                 onMobileClose={() => setMobileOpen(false)}
             />
-            <div className="flex flex-1 flex-col min-w-0">
+            <div className="flex flex-1 flex-col min-w-0 overflow-hidden">
                 <DashboardHeader
                     user={user}
                     onMobileMenuOpen={() => setMobileOpen(true)}

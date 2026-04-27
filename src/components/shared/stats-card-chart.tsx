@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { ChartContainer, type ChartConfig } from "@/components/ui/chart";
 import { Area, AreaChart, XAxis } from "recharts";
 import { cn } from "@/lib/utils";
@@ -45,8 +45,8 @@ export function StatsCardChart({
                                 changeType === "positive"
                                     ? "text-green-600 dark:text-green-500"
                                     : changeType === "negative"
-                                      ? "text-red-600 dark:text-red-500"
-                                      : "text-foreground",
+                                        ? "text-red-600 dark:text-red-500"
+                                        : "text-foreground",
                                 "text-lg font-semibold",
                             )}
                         >

@@ -80,3 +80,67 @@ export async function getRiderProfile(): Promise<RiderProfileResponse> {
 export async function getRiderDashboard(): Promise<RiderDashboardResponse> {
     return serverFetch<RiderDashboardResponse>("/rider/dashboard");
 }
+
+export interface Cashout {
+    id: string;
+    riderId: string;
+    amount: number;
+    status: "PENDING" | "APPROVED" | "REJECTED" | "PAID";
+    requestedAt: string;
+    processedAt: string | null;
+}
+
+export interface CashoutsMeta {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+}
+
+export interface CashoutsResponse {
+    success: boolean;
+    message: string;
+    data: Cashout[];
+    meta: CashoutsMeta;
+}
+
+export interface GetCashoutsParams {
+    page?: number;
+    limit?: number;
+    status?: "PENDING" | "APPROVED" | "REJECTED" | "PAID" | "ALL";
+    startDate?: string;
+    endDate?: string;
+}
+
+export async function getCashouts(params: GetCashoutsParams = {}): Promise<CashoutsResponse> {
+    const searchParams = new URLSearchParams();
+    if (params.page) searchParams.set("page", params.page.toString());
+    if (params.limit) searchParams.set("limit", params.limit.toString());
+    if (params.status) searchParams.set("status", params.status);
+    if (params.startDate) searchParams.set("startDate", params.startDate);
+    if (params.endDate) searchParams.set("endDate", params.endDate);
+
+    return serverFetch<CashoutsResponse>(`/rider/cashouts/me?${searchParams.toString()}`);
+}
+
+export interface CashoutRequest {
+    id: string;
+    riderId: string;
+    amount: number;
+    status: "PENDING";
+    requestedAt: string;
+    processedAt: null;
+}
+
+export interface CashoutRequestResponse {
+    success: boolean;
+    message: string;
+    data: CashoutRequest;
+}
+
+export async function requestCashout(amount: number): Promise<CashoutRequestResponse> {
+    return serverFetch<CashoutRequestResponse>("/rider/cashouts/request", {
+        method: "POST",
+        body: JSON.stringify({ amount }),
+    });
+}

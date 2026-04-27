@@ -3,23 +3,28 @@
  * Handles role hierarchy, permissions, and access control
  */
 
-export type UserRole = "SUPER_ADMIN" | "ADMIN" | "RIDER" | "CUSTOMER";
+export enum UserRole {
+  SUPER_ADMIN = "SUPER_ADMIN",
+  ADMIN = "ADMIN",
+  RIDER = "RIDER",
+  CUSTOMER = "CUSTOMER",
+}
 
 /**
  * Role hierarchy - higher number = higher privilege
  */
 export const roleHierarchy: Record<UserRole, number> = {
-  SUPER_ADMIN: 4,
-  ADMIN: 3,
-  RIDER: 2,
-  CUSTOMER: 1,
+  [UserRole.SUPER_ADMIN]: 4,
+  [UserRole.ADMIN]: 3,
+  [UserRole.RIDER]: 2,
+  [UserRole.CUSTOMER]: 1,
 };
 
 /**
  * Role permissions mapping
  */
 export const rolePermissions: Record<UserRole, string[]> = {
-  SUPER_ADMIN: [
+  [UserRole.SUPER_ADMIN]: [
     "manage_users",
     "manage_roles",
     "manage_system_settings",
@@ -31,7 +36,7 @@ export const rolePermissions: Record<UserRole, string[]> = {
     "manage_disputes",
     "manage_payments",
   ],
-  ADMIN: [
+  [UserRole.ADMIN]: [
     "manage_users",
     "view_analytics",
     "manage_riders",
@@ -40,7 +45,7 @@ export const rolePermissions: Record<UserRole, string[]> = {
     "manage_disputes",
     "manage_payments",
   ],
-  RIDER: [
+  [UserRole.RIDER]: [
     "view_rides",
     "accept_rides",
     "complete_rides",
@@ -50,7 +55,7 @@ export const rolePermissions: Record<UserRole, string[]> = {
     "manage_vehicle",
     "view_history",
   ],
-  CUSTOMER: [
+  [UserRole.CUSTOMER]: [
     "book_rides",
     "view_rides",
     "pay_rides",
@@ -66,13 +71,13 @@ export const rolePermissions: Record<UserRole, string[]> = {
  */
 export const getParentRole = (role: UserRole): UserRole | null => {
   switch (role) {
-    case "CUSTOMER":
+    case UserRole.CUSTOMER:
       return null; // No parent
-    case "RIDER":
+    case UserRole.RIDER:
       return null; // No parent
-    case "ADMIN":
-      return "SUPER_ADMIN";
-    case "SUPER_ADMIN":
+    case UserRole.ADMIN:
+      return UserRole.SUPER_ADMIN;
+    case UserRole.SUPER_ADMIN:
       return null; // No parent
     default:
       return null;
@@ -179,10 +184,10 @@ export function compareRoles(role1: UserRole, role2: UserRole): number {
  */
 export function getRoleDescription(role: UserRole): string {
   const descriptions: Record<UserRole, string> = {
-    SUPER_ADMIN: "Super Administrator",
-    ADMIN: "Administrator",
-    RIDER: "Rider",
-    CUSTOMER: "Customer",
+    [UserRole.SUPER_ADMIN]: "Super Administrator",
+    [UserRole.ADMIN]: "Administrator",
+    [UserRole.RIDER]: "Rider",
+    [UserRole.CUSTOMER]: "Customer",
   };
   return descriptions[role] || role;
 }
@@ -194,10 +199,10 @@ export function getRoleDescription(role: UserRole): string {
  */
 export function getRoleBadgeColor(role: UserRole): string {
   const colors: Record<UserRole, string> = {
-    SUPER_ADMIN: "red",
-    ADMIN: "orange",
-    RIDER: "blue",
-    CUSTOMER: "green",
+    [UserRole.SUPER_ADMIN]: "red",
+    [UserRole.ADMIN]: "orange",
+    [UserRole.RIDER]: "blue",
+    [UserRole.CUSTOMER]: "green",
   };
   return colors[role] || "gray";
 }
@@ -212,13 +217,13 @@ export function canManageRole(managerRole: UserRole | null, targetRole: UserRole
   if (!managerRole) return false;
 
   // Only SUPER_ADMIN can manage all roles
-  if (managerRole === "SUPER_ADMIN") {
+  if (managerRole === UserRole.SUPER_ADMIN) {
     return true;
   }
 
   // ADMIN can manage RIDER and CUSTOMER
-  if (managerRole === "ADMIN") {
-    return targetRole === "RIDER" || targetRole === "CUSTOMER";
+  if (managerRole === UserRole.ADMIN) {
+    return targetRole === UserRole.RIDER || targetRole === UserRole.CUSTOMER;
   }
 
   // Other roles cannot manage anyone
@@ -234,12 +239,12 @@ export function getManageableRoles(role: UserRole | null): UserRole[] {
   if (!role) return [];
 
   switch (role) {
-    case "SUPER_ADMIN":
-      return ["SUPER_ADMIN", "ADMIN", "RIDER", "CUSTOMER"];
-    case "ADMIN":
-      return ["RIDER", "CUSTOMER"];
-    case "RIDER":
-    case "CUSTOMER":
+    case UserRole.SUPER_ADMIN:
+      return [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.RIDER, UserRole.CUSTOMER];
+    case UserRole.ADMIN:
+      return [UserRole.RIDER, UserRole.CUSTOMER];
+    case UserRole.RIDER:
+    case UserRole.CUSTOMER:
       return []; // Cannot manage any roles
     default:
       return [];
@@ -252,7 +257,7 @@ export function getManageableRoles(role: UserRole | null): UserRole[] {
  * @returns Boolean indicating if role is admin level
  */
 export function isAdminRole(role: UserRole | null): boolean {
-  return role === "ADMIN" || role === "SUPER_ADMIN";
+  return role === UserRole.ADMIN || role === UserRole.SUPER_ADMIN;
 }
 
 /**
@@ -261,7 +266,7 @@ export function isAdminRole(role: UserRole | null): boolean {
  * @returns Boolean indicating if role is customer
  */
 export function isCustomerRole(role: UserRole | null): boolean {
-  return role === "CUSTOMER";
+  return role === UserRole.CUSTOMER;
 }
 
 /**
@@ -270,5 +275,5 @@ export function isCustomerRole(role: UserRole | null): boolean {
  * @returns Boolean indicating if role is rider
  */
 export function isRiderRole(role: UserRole | null): boolean {
-  return role === "RIDER";
+  return role === UserRole.RIDER;
 }

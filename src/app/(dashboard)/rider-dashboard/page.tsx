@@ -1,7 +1,6 @@
 import { getRiderDashboard } from "@/services/rider.server";
 import { StatsCardBasic } from "@/components/shared/stats-card-basic";
 import { StatsCardTrend } from "@/components/shared/stats-card-trend";
-import { StatsCardStatus } from "@/components/shared/stats-card-status";
 import { ChartArea } from "@/components/shared/chart-area";
 import { ChartPie } from "@/components/shared/chart-pie";
 import { Package, Star, Clock, Wallet, TrendingUp } from "lucide-react";
@@ -43,13 +42,6 @@ export default async function RiderDashboardPage() {
     earnings: {
       label: "Earnings",
       color: "var(--color-chart-1)",
-    },
-  };
-
-  const deliveriesConfig = {
-    deliveries: {
-      label: "Deliveries",
-      color: "var(--color-chart-2)",
     },
   };
 
