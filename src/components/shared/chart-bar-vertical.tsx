@@ -25,15 +25,15 @@ export function ChartBarVertical({
   className,
 }: ChartBarVerticalProps) {
   return (
-    <Card className={cn("", className)}>
+    <Card className={cn("h-full", className)}>
       {title && (
         <CardHeader>
           <CardTitle>{title}</CardTitle>
           {description && <CardDescription>{description}</CardDescription>}
         </CardHeader>
       )}
-      <CardContent>
-        <ChartContainer config={config}>
+      <CardContent className="h-full">
+        <ChartContainer config={config} className="w-full h-full">
           <BarChart accessibilityLayer data={data}>
             <CartesianGrid vertical={false} />
             <XAxis

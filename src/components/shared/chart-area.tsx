@@ -25,15 +25,15 @@ export function ChartArea({
     className,
 }: ChartAreaProps) {
     return (
-        <Card className={cn("", className)}>
+        <Card className={cn("h-full", className)}>
             {title && (
                 <CardHeader>
                     <CardTitle>{title}</CardTitle>
                     {description && <CardDescription>{description}</CardDescription>}
                 </CardHeader>
             )}
-            <CardContent>
-                <ChartContainer config={config} className="max-h-[440px] w-full">
+            <CardContent className="h-full">
+                <ChartContainer config={config} className="w-full h-full">
                     <AreaChart
                         accessibilityLayer
                         data={data}

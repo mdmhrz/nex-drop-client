@@ -58,8 +58,9 @@ export function ChartPie({
                                                 textAnchor={props.textAnchor}
                                                 dominantBaseline={props.dominantBaseline}
                                                 fill="var(--foreground)"
+                                                fontSize={12}
                                             >
-                                                {payload[dataKey]}
+                                                {payload[nameKey]}: {payload[dataKey]}
                                             </text>
                                         );
                                     }

@@ -71,10 +71,10 @@ export function PaymentModal({ parcel, open, onOpenChange }: PaymentModalProps) 
           {/* Payment Options */}
           {!initiatePayment.isPending && (
             <div className="grid grid-cols-2 gap-4">
-              <Card className="cursor-pointer hover:border-primary transition-colors">
+              <Card className="cursor-pointer hover:border-primary transition-colors hover:bg-secondary/50">
                 <CardHeader className="p-4">
                   <div className="flex items-center justify-center mb-2">
-                    <Image src="/payment-methods/stripe.png" alt="Stripe" width={48} height={48} className="h-12 w-auto" />
+                    <Image src="/payment-methods/stripe.svg" alt="Stripe" width={48} height={48} className="h-12 w-auto" />
                   </div>
                   <CardTitle className="text-center text-sm">Stripe</CardTitle>
                   <CardDescription className="text-center text-xs">
@@ -93,10 +93,10 @@ export function PaymentModal({ parcel, open, onOpenChange }: PaymentModalProps) 
                 </CardContent>
               </Card>
 
-              <Card className="cursor-pointer hover:border-primary transition-colors">
+              <Card className="cursor-pointer hover:border-primary transition-colors  hover:bg-secondary/50">
                 <CardHeader className="p-4">
                   <div className="flex items-center justify-center mb-2">
-                    <Image src="/payment-methods/sslcommerz.png" alt="SSLCommerz" width={48} height={48} className="h-12 w-auto" />
+                    <Image src="/payment-methods/sslcommerz.svg" alt="SSLCommerz" width={48} height={48} className="h-12 w-auto object-contain" />
                   </div>
                   <CardTitle className="text-center text-sm">SSLCommerz</CardTitle>
                   <CardDescription className="text-center text-xs">
