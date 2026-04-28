@@ -74,10 +74,10 @@ export function UserDropdown({ user }: UserDropdownProps) {
                     </Button>
                 </DropdownMenuTrigger>
 
-                <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuContent align="end" className="w-56 p-2">
                     <DropdownMenuLabel className="pb-1">
                         <div className="flex flex-col gap-1">
-                            <span className="font-medium">{user.name || "User"}</span>
+                            <span className="font-medium text-sm">{user.name || "User"}</span>
                             <span className="text-xs text-muted-foreground font-normal truncate">{user.email}</span>
                             <Badge variant={roleBadgeVariants[user.role]} className="w-fit text-xs mt-1">
                                 {roleLabels[user.role]}

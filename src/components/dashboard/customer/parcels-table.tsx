@@ -124,7 +124,7 @@ const getColumns = (onCancel: (parcel: Parcel) => void, onPay: (parcel: Parcel) 
         });
       }
 
-      if (!parcel.isPaid) {
+      if (!parcel.isPaid && parcel.status !== "CANCELLED") {
         actions.push({
           label: "Pay Now",
           icon: <CreditCard className="size-4" />,

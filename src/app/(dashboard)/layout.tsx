@@ -15,8 +15,10 @@ export default async function DashboardLayout({
   }
 
   return (
-    <DashboardShell user={{ name: user.name, email: user.email, role: user.role }}>
-      {children}
-    </DashboardShell>
+    <div className="fixed inset-0 overflow-hidden">
+      <DashboardShell user={{ name: user.name, email: user.email, role: user.role }}>
+        {children}
+      </DashboardShell>
+    </div>
   );
 }

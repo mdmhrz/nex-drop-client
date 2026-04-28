@@ -2,9 +2,25 @@
 
 import React from "react";
 import Link from "next/link";
-import { CheckCircle, XCircle, Copy, Mail } from "lucide-react";
+import {
+    CheckCircle2,
+    XCircle,
+    Copy,
+} from "lucide-react";
+
 import { toast } from "sonner";
-import { PrimaryButton } from "@/components/shared/primary-button";
+
+import { Button } from "@/components/ui/button";
+import {
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+    CardDescription,
+} from "@/components/ui/card";
+
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 
 interface PaymentResultProps {
     status: "success" | "fail";
@@ -21,68 +37,119 @@ export default function PaymentResult({
     details,
     sessionId,
 }: PaymentResultProps) {
-    const icon = status === "success" ? (
-        <CheckCircle className="h-14 w-14 text-emerald-500" />
-    ) : (
-        <XCircle className="h-14 w-14 text-rose-600" />
-    );
+
+    const isSuccess = status === "success";
 
     async function copyToClipboard(text: string) {
         try {
             await navigator.clipboard.writeText(text);
             toast.success("Transaction ID copied");
-        } catch (err) {
+        } catch {
             toast.error("Copy failed");
         }
     }
 
     return (
-        <div className="max-w-3xl mx-auto py-16 lg:mt-28 px-6">
-            <div className="bg-white shadow rounded-lg p-8 text-center">
-                <div className="flex items-center justify-center mb-4">{icon}</div>
-                <h1 className="text-2xl font-semibold mb-2">{title}</h1>
-                {message && <p className="text-sm text-muted-foreground mb-6">{message}</p>}
+        <div className="min-h-screen bg-background flex items-center justify-center">
+            <div className="container max-w-2xl mx-auto py-16">
+                <Card className="shadow-sm">
 
-                {details && (
-                    <div className="text-left my-4">
-                        <dl className="grid grid-cols-1 gap-2">
-                            {Object.entries(details).map(([k, v]) => (
-                                <div key={k} className="flex items-center justify-between py-2 border-b">
-                                    <dt className="text-xs text-muted-foreground">{k}</dt>
-                                    <dd className="text-sm font-medium">{v}</dd>
+                    {/* Header */}
+                    <CardHeader className="items-center flex flex-col justify-center text-center  space-y-3">
+
+                        <div className="flex items-ceter justify-center">
+                            {isSuccess ? (
+                                <CheckCircle2 className="h-12 w-12 text-primary" />
+                            ) : (
+                                <XCircle className="h-12 w-12 text-destructive" />
+                            )}
+                        </div>
+
+                        <CardTitle className="text-2xl">
+                            {title || (isSuccess ? "Payment Successful" : "Payment Failed")}
+                        </CardTitle>
+
+                        {message && (
+                            <CardDescription>{message}</CardDescription>
+                        )}
+
+                        <Badge variant={isSuccess ? "default" : "destructive"}>
+                            {isSuccess ? "Success" : "Failed"}
+                        </Badge>
+                    </CardHeader>
+
+                    {/* Content */}
+                    <CardContent className="space-y-6">
+
+                        {/* Details */}
+                        {details && (
+                            <div className="space-y-3">
+                                {Object.entries(details).map(([k, v]) => (
+                                    <div
+                                        key={k}
+                                        className="flex items-center justify-between text-sm"
+                                    >
+                                        <span className="text-muted-foreground">{k}</span>
+                                        <span className="font-medium">{v}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
+                        {/* Session ID */}
+                        {sessionId && (
+                            <>
+                                <Separator />
+                                <div className="flex items-center justify-between gap-3 text-sm">
+
+                                    <span className="text-muted-foreground">
+                                        Transaction ID
+                                    </span>
+
+                                    <div className="flex items-center gap-2">
+                                        <code className="text-xs bg-muted px-2 py-1 rounded">
+                                            {sessionId}
+                                        </code>
+
+                                        <Button
+                                            size="icon"
+                                            variant="ghost"
+                                            onClick={() => copyToClipboard(sessionId)}
+                                        >
+                                            <Copy className="h-4 w-4" />
+                                        </Button>
+                                    </div>
                                 </div>
-                            ))}
-                        </dl>
-                    </div>
-                )}
+                            </>
+                        )}
 
-                {sessionId && (
-                    <div className="flex items-center justify-center gap-3 mt-4">
-                        <div className="text-sm text-muted-foreground">Transaction ID:</div>
-                        <div className="font-mono text-sm">{sessionId}</div>
-                        <button
-                            aria-label="Copy transaction id"
-                            className="inline-flex items-center justify-center p-2 rounded-md hover:bg-slate-100"
-                            onClick={() => copyToClipboard(sessionId)}
-                        >
-                            <Copy className="h-4 w-4" />
-                        </button>
-                    </div>
-                )}
+                        <Separator />
 
-                <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
-                    <Link href="/dashboard/parcels">
-                        <PrimaryButton>View Orders</PrimaryButton>
-                    </Link>
+                        {/* Actions */}
+                        <div className="flex flex-col sm:flex-row gap-3 justify-center">
 
-                    <Link href="/contact">
-                        <PrimaryButton>Contact Support</PrimaryButton>
-                    </Link>
+                            <Link href="/dashboard/parcels">
+                                <Button className="w-full sm:w-auto">
+                                    View Orders
+                                </Button>
+                            </Link>
 
-                    <Link href="/">
-                        <PrimaryButton>Home</PrimaryButton>
-                    </Link>
-                </div>
+                            <Link href="/contact">
+                                <Button variant="outline" className="w-full sm:w-auto">
+                                    Contact Support
+                                </Button>
+                            </Link>
+
+                            <Link href="/">
+                                <Button variant="outline" className="w-full sm:w-auto">
+                                    Back to Home
+                                </Button>
+                            </Link>
+
+                        </div>
+
+                    </CardContent>
+                </Card>
             </div>
         </div>
     );

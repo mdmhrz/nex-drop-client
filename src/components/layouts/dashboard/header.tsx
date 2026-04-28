@@ -60,7 +60,7 @@ export function DashboardHeader({ user, onMobileMenuOpen }: DashboardHeaderProps
   const breadcrumbs = buildBreadcrumbs(pathname);
 
   return (
-    <header className="flex h-16 items-center justify-between border-b bg-card px-4 md:px-6 sticky top-0 z-10">
+    <header className="flex h-16 items-center justify-between border-b bg-card px-4 md:px-6 shrink-0">
       {/* Left: Hamburger (mobile) + Breadcrumb */}
       <div className="flex items-center gap-2">
         <Button
@@ -101,7 +101,7 @@ export function DashboardHeader({ user, onMobileMenuOpen }: DashboardHeaderProps
       </div>
 
       {/* Right: Theme + Notifications + User */}
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-3">
         {/* Theme Toggle */}
         <ThemeToggle />
 
