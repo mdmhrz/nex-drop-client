@@ -7,9 +7,9 @@ import { StatusBadge } from "@/components/shared/status-badge";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { UserAvatar } from "@/components/shared/user-avatar";
 import { EmptyState } from "@/components/shared/empty-state";
+import { DateDisplay } from "@/components/shared/date-display";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, MapPin, Package, CircleDollarSign, CalendarDays, PackageX } from "lucide-react";
-import { format } from "date-fns";
 
 export default async function ParcelPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
@@ -110,7 +110,7 @@ export default async function ParcelPage({ params }: { params: Promise<{ id: str
                             <CalendarDays className="size-4 mt-0.5 text-muted-foreground shrink-0" />
                             <div>
                                 <p className="text-sm text-muted-foreground">Created At</p>
-                                <p className="font-medium">{format(new Date(parcel.createdAt), "PPpp")}</p>
+                                <DateDisplay value={parcel.createdAt} className="font-medium" />
                             </div>
                         </div>
                     </div>
@@ -207,9 +207,7 @@ export default async function ParcelPage({ params }: { params: Promise<{ id: str
                                             >
                                                 {log.status}
                                             </StatusBadge>
-                                            <span className="text-xs text-muted-foreground shrink-0">
-                                                {format(new Date(log.timestamp), "PPpp")}
-                                            </span>
+                                            <DateDisplay value={log.timestamp} className="text-xs text-muted-foreground shrink-0" />
                                         </div>
                                         {log.note && <p className="mt-1 text-sm">{log.note}</p>}
                                         <p className="mt-1 text-xs text-muted-foreground">By: {log.user?.name}</p>
