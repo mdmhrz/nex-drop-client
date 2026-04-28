@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import { allDistricts, upazilaNamesOf, thanaNamesOf } from "@bangladeshi/bangladesh-address/build/src";
-import { Home } from "lucide-react";
 import { InputField } from "@/components/shared/input-field";
 import { DistrictCombobox } from "@/components/shared/district-combobox";
 import { Label } from "@/components/ui/label";

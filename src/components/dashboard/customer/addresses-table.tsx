@@ -20,7 +20,7 @@ export function AddressesTable() {
   });
   const [selectedAddressForEdit, setSelectedAddressForEdit] = useState<Address | null>(null);
   const [selectedAddressForDelete, setSelectedAddressForDelete] = useState<Address | null>(null);
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+
 
   const { data, isLoading } = useAddresses({
     page: pagination.pageIndex + 1,
@@ -46,9 +46,7 @@ export function AddressesTable() {
     setDefaultAddress(address.id);
   };
 
-  const handleCreate = () => {
-    setIsCreateModalOpen(true);
-  };
+ 
 
   const columns: ColumnDef<Address>[] = [
     {
@@ -156,16 +154,9 @@ export function AddressesTable() {
           pageCount: data?.meta?.totalPages,
           totalItems: data?.meta?.total,
         }}
-        onCreate={handleCreate}
-        createButtonLabel="Add Address"
+        createButtonLabel={undefined}
       />
 
-      {/* Create Address Modal */}
-      <AddressFormModal
-        address={null}
-        open={isCreateModalOpen}
-        onOpenChange={setIsCreateModalOpen}
-      />
 
       {/* Edit Address Modal */}
       {selectedAddressForEdit && (

@@ -16,7 +16,7 @@ import { useAddressMutations, type Address, type CreateAddressInput, type Update
 import { SubmitButton } from "@/components/shared/submit-button";
 import { InputField } from "@/components/shared/input-field";
 import { BangladeshAddressSelector } from "@/components/shared/bangladesh-address-selector";
-import { Check, Tag, Phone } from "lucide-react";
+import { Check } from "lucide-react";
 
 const addressSchema = z
   .object({
@@ -56,7 +56,7 @@ export function AddressFormModal({ address, open, onOpenChange }: AddressFormMod
     setValue,
     watch,
     reset,
-    formState: { errors, isValid },
+    formState: { errors },
   } = useForm<AddressFormData>({
     resolver: zodResolver(addressSchema),
     mode: "onChange",

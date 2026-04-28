@@ -11,7 +11,6 @@ import { StatusBadge } from "@/components/shared/status-badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { InputField } from "@/components/shared/input-field";
-import { Skeleton } from "@/components/ui/skeleton";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -90,7 +89,7 @@ export function CustomerProfileContent() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Profile</h1>
+          <h1 className="section-heading-text text-2xl font-bold tracking-tight">Profile</h1>
           <p className="text-muted-foreground">View and manage your profile information.</p>
         </div>
         <Button onClick={handleEditClick} size="sm">

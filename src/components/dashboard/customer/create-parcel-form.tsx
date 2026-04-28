@@ -5,7 +5,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import {
     MapPin,
-    Weight,
     FileText,
     ArrowRight,
     Package,
