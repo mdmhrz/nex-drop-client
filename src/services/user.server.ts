@@ -151,3 +151,31 @@ export async function initiatePayment(id: string, params: InitiatePaymentParams)
     body: JSON.stringify(params),
   });
 }
+
+export interface UpdateProfileInput {
+  name?: string;
+  email?: string;
+  password?: string;
+}
+
+export interface UpdateProfileResponse {
+  success: boolean;
+  message: string;
+  data: {
+    id: string;
+    name: string;
+    email: string;
+    role: "CUSTOMER" | "ADMIN" | "RIDER" | "SUPER_ADMIN";
+    status: "ACTIVE" | "BLOCKED" | "DELETED";
+    emailVerified: boolean;
+    createdAt: string;
+    updatedAt: string;
+  };
+}
+
+export async function updateProfile(data: UpdateProfileInput): Promise<UpdateProfileResponse> {
+  return serverFetch<UpdateProfileResponse>("/users/me", {
+    method: "PATCH",
+    body: JSON.stringify(data),
+  });
+}

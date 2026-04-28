@@ -163,14 +163,7 @@ export const navigationConfig: Record<UserRole, RoleNavigationConfig> = {
                         icon: User,
                         roles: [UserRole.CUSTOMER],
                         description: "Edit profile",
-                    },
-                    {
-                        name: "Settings",
-                        href: "/dashboard/settings",
-                        icon: Settings,
-                        roles: [UserRole.CUSTOMER],
-                        description: "Account settings",
-                    },
+                    }
                 ],
             },
         ],
