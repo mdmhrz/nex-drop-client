@@ -56,7 +56,7 @@ export function DistrictCombobox({
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
-                <Command>
+                <Command >
                     <CommandInput placeholder="Search district..." />
                     <CommandList>
                         <CommandEmpty>No district found.</CommandEmpty>

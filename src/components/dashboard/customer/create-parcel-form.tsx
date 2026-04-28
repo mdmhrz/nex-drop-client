@@ -3,15 +3,8 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import * as React from "react";
-import {
-    allDistricts,
-    upazilaNamesOf,
-    thanaNamesOf,
-} from "@bangladeshi/bangladesh-address/build/src";
 import {
     MapPin,
-    Home,
     Weight,
     FileText,
     ArrowRight,
@@ -19,11 +12,11 @@ import {
     Zap,
     Info,
 } from "lucide-react";
-import { InputField } from "@/components/shared/input-field";
 import { SubmitButton } from "@/components/shared/submit-button";
-import { DistrictCombobox } from "@/components/shared/district-combobox";
+import { BangladeshAddressSelector } from "@/components/shared/bangladesh-address-selector";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { InputField } from "@/components/shared/input-field";
 import {
     Select,
     SelectContent,
@@ -78,142 +71,45 @@ const PARCEL_TYPE_LABELS: Record<ParcelType, string> = {
     DOCUMENT: "Document", SMALL: "Small Package", MEDIUM: "Medium Package",
     LARGE: "Large Package", FRAGILE: "Fragile Item", ELECTRONICS: "Electronics",
 };
-const allDistrictList = allDistricts();
 
 // ─── Zod Schema ───────────────────────────────────────────────────────────────
 
-const createParcelSchema = z.object({
-    pickupAddressText: z.string().max(300, "Max 300 characters").optional(),
-    pickupDistrict: z.string().min(1, "Pickup district is required"),
-    pickupUpazila: z.string().min(1, "Pickup upazila is required"),
-    pickupThana: z.string().optional(),
-    deliveryAddressText: z.string().max(300, "Max 300 characters").optional(),
-    deliveryDistrict: z.string().min(1, "Delivery district is required"),
-    deliveryUpazila: z.string().min(1, "Delivery upazila is required"),
-    deliveryThana: z.string().optional(),
-    weight: z.coerce
-        .number({ invalid_type_error: "Weight must be a number" })
-        .positive("Weight must be greater than 0")
-        .max(50, "Maximum weight is 50 kg"),
-    parcelType: z.enum(PARCEL_TYPES, { message: "Select a parcel type" }),
-    serviceType: z.enum(SERVICE_TYPES, { message: "Select a service type" }),
-    note: z.string().max(1000, "Note must be 1000 characters or less").optional(),
-});
+const createParcelSchema = z
+    .object({
+        pickupAddressText: z.string().max(300, "Max 300 characters").optional(),
+        pickupDistrict: z.string().min(1, "Pickup district is required"),
+        pickupUpazila: z.string().max(255, "Pickup upazila must be 255 characters or less").optional(),
+        pickupThana: z.string().max(255, "Pickup thana must be 255 characters or less").optional(),
+        deliveryAddressText: z.string().max(300, "Max 300 characters").optional(),
+        deliveryDistrict: z.string().min(1, "Delivery district is required"),
+        deliveryUpazila: z.string().max(255, "Delivery upazila must be 255 characters or less").optional(),
+        deliveryThana: z.string().max(255, "Delivery thana must be 255 characters or less").optional(),
+        weight: z.coerce
+            .number({ invalid_type_error: "Weight must be a number" })
+            .positive("Weight must be greater than 0")
+            .max(50, "Maximum weight is 50 kg"),
+        parcelType: z.enum(PARCEL_TYPES, { message: "Select a parcel type" }),
+        serviceType: z.enum(SERVICE_TYPES, { message: "Select a service type" }),
+        note: z.string().max(1000, "Note must be 1000 characters or less").optional(),
+    })
+    .superRefine((data, ctx) => {
+        if (!data.pickupUpazila && !data.pickupThana) {
+            ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: "Please select a pickup upazila or pickup thana",
+                path: ["pickupUpazila"],
+            });
+        }
+        if (!data.deliveryUpazila && !data.deliveryThana) {
+            ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: "Please select a delivery upazila or delivery thana",
+                path: ["deliveryUpazila"],
+            });
+        }
+    });
 
 type FormData = z.infer<typeof createParcelSchema>;
-
-// ─── Address Section ──────────────────────────────────────────────────────────
-
-type AddressPrefix = "pickup" | "delivery";
-
-interface AddressSectionProps {
-    prefix: AddressPrefix;
-    register: ReturnType<typeof useForm<FormData>>["register"];
-    watch: ReturnType<typeof useForm<FormData>>["watch"];
-    setValue: ReturnType<typeof useForm<FormData>>["setValue"];
-    errors: ReturnType<typeof useForm<FormData>>["formState"]["errors"];
-}
-
-function AddressSection({ prefix, register, watch, setValue, errors }: AddressSectionProps) {
-    const districtKey = `${prefix}District` as const;
-    const upazilaKey = `${prefix}Upazila` as const;
-    const thanaKey = `${prefix}Thana` as const;
-    const addressTextKey = `${prefix}AddressText` as const;
-
-    const selectedDistrict = watch(districtKey);
-    const selectedUpazila = watch(upazilaKey);
-
-    const upazilas = React.useMemo(
-        () => (selectedDistrict ? upazilaNamesOf(selectedDistrict) : []),
-        [selectedDistrict]
-    );
-    const thanas = React.useMemo(
-        () => (selectedDistrict ? thanaNamesOf(selectedDistrict) : []),
-        [selectedDistrict]
-    );
-
-    return (
-        <div className="space-y-4">
-            <InputField
-                label="Street / House / Flat (optional)"
-                placeholder="e.g. House 12, Road 5"
-                staticLabel
-                beforeAppend={<Home className="h-4 w-4" />}
-                {...register(addressTextKey)}
-                error={errors[addressTextKey]?.message}
-            />
-
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div className="space-y-1.5">
-                    <Label className={cn(errors[districtKey] && "text-destructive")}>
-                        District <span className="text-destructive">*</span>
-                    </Label>
-                    <DistrictCombobox
-                        value={watch(districtKey)}
-                        onChange={(val) => {
-                            setValue(districtKey, val, { shouldValidate: true });
-                            setValue(upazilaKey, "", { shouldValidate: false });
-                            setValue(thanaKey, "", { shouldValidate: false });
-                        }}
-                        districts={allDistrictList}
-                        error={!!errors[districtKey]}
-                        placeholder="Search district..."
-                    />
-                    {errors[districtKey] && (
-                        <p className="text-xs text-destructive">{errors[districtKey]?.message}</p>
-                    )}
-                </div>
-
-                <div className="space-y-1.5">
-                    <Label className={cn(errors[upazilaKey] && "text-destructive")}>
-                        Upazila <span className="text-destructive">*</span>
-                    </Label>
-                    <Select
-                        value={selectedUpazila ?? ""}
-                        onValueChange={(val) => setValue(upazilaKey, val, { shouldValidate: true })}
-                        disabled={!selectedDistrict}
-                    >
-                        <SelectTrigger className={cn(errors[upazilaKey] && "border-destructive")}>
-                            <SelectValue
-                                placeholder={selectedDistrict ? "Select upazila" : "Select district first"}
-                            />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {upazilas.map((u) => (
-                                <SelectItem key={u} value={u}>{u}</SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                    {errors[upazilaKey] && (
-                        <p className="text-xs text-destructive">{errors[upazilaKey]?.message}</p>
-                    )}
-                </div>
-            </div>
-
-            {thanas.length > 0 && (
-                <div className="space-y-1.5">
-                    <Label>
-                        Thana{" "}
-                        <span className="text-xs text-muted-foreground font-normal">(optional)</span>
-                    </Label>
-                    <Select
-                        value={watch(thanaKey) ?? ""}
-                        onValueChange={(val) => setValue(thanaKey, val, { shouldValidate: true })}
-                    >
-                        <SelectTrigger>
-                            <SelectValue placeholder="Select thana (optional)" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {thanas.map((t) => (
-                                <SelectItem key={t} value={t}>{t}</SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                </div>
-            )}
-        </div>
-    );
-}
 
 // ─── Price Preview ────────────────────────────────────────────────────────────
 
@@ -299,18 +195,18 @@ export function CreateParcelForm() {
 
     const [weight, parcelType, serviceType, pickupDistrict, deliveryDistrict] = watch([
         "weight", "parcelType", "serviceType", "pickupDistrict", "deliveryDistrict",
-    ]);
+    ] as const);
 
-    const buildAddress = (text: string, thana: string, upazila: string, district: string) =>
+    const buildAddress = (text: string, upazila?: string, district?: string, thana?: string) =>
         [text, thana, upazila, district].filter(Boolean).join(", ");
 
     const onSubmit = (data: FormData) => {
         createParcel({
             pickupAddress: buildAddress(
-                data.pickupAddressText ?? "", data.pickupThana ?? "", data.pickupUpazila, data.pickupDistrict
+                data.pickupAddressText ?? "", data.pickupUpazila, data.pickupDistrict, data.pickupThana
             ),
             deliveryAddress: buildAddress(
-                data.deliveryAddressText ?? "", data.deliveryThana ?? "", data.deliveryUpazila, data.deliveryDistrict
+                data.deliveryAddressText ?? "", data.deliveryUpazila, data.deliveryDistrict, data.deliveryThana
             ),
             districtFrom: data.pickupDistrict,
             districtTo: data.deliveryDistrict,
@@ -381,7 +277,20 @@ export function CreateParcelForm() {
                         <CardDescription>Where should the parcel be collected from?</CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <AddressSection prefix="pickup" register={register} watch={watch} setValue={setValue} errors={errors} />
+                        <BangladeshAddressSelector
+                            addressTextValue={watch("pickupAddressText")}
+                            onAddressTextChange={(val) => setValue("pickupAddressText", val)}
+                            addressTextError={errors.pickupAddressText?.message}
+                            districtValue={watch("pickupDistrict")}
+                            onDistrictChange={(val) => setValue("pickupDistrict", val, { shouldValidate: true })}
+                            districtError={errors.pickupDistrict?.message}
+                            upazilaValue={watch("pickupUpazila")}
+                            onUpazilaChange={(val) => setValue("pickupUpazila", val, { shouldValidate: true })}
+                            upazilaError={errors.pickupUpazila?.message}
+                            thanaValue={watch("pickupThana")}
+                            onThanaChange={(val) => setValue("pickupThana", val)}
+                            thanaError={errors.pickupThana?.message}
+                        />
                     </CardContent>
                 </Card>
 
@@ -395,7 +304,20 @@ export function CreateParcelForm() {
                         <CardDescription>Where should the parcel be delivered to?</CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <AddressSection prefix="delivery" register={register} watch={watch} setValue={setValue} errors={errors} />
+                        <BangladeshAddressSelector
+                            addressTextValue={watch("deliveryAddressText")}
+                            onAddressTextChange={(val) => setValue("deliveryAddressText", val)}
+                            addressTextError={errors.deliveryAddressText?.message}
+                            districtValue={watch("deliveryDistrict")}
+                            onDistrictChange={(val) => setValue("deliveryDistrict", val, { shouldValidate: true })}
+                            districtError={errors.deliveryDistrict?.message}
+                            upazilaValue={watch("deliveryUpazila")}
+                            onUpazilaChange={(val) => setValue("deliveryUpazila", val, { shouldValidate: true })}
+                            upazilaError={errors.deliveryUpazila?.message}
+                            thanaValue={watch("deliveryThana")}
+                            onThanaChange={(val) => setValue("deliveryThana", val)}
+                            thanaError={errors.deliveryThana?.message}
+                        />
                     </CardContent>
                 </Card>
             </div>
@@ -419,7 +341,6 @@ export function CreateParcelForm() {
                                 type="number"
                                 placeholder="e.g. 1.5"
                                 staticLabel
-                                beforeAppend={<Weight className="h-4 w-4" />}
                                 {...register("weight")}
                                 error={errors.weight?.message}
                                 min={0.1}
@@ -436,7 +357,7 @@ export function CreateParcelForm() {
                                         setValue("parcelType", val as ParcelType, { shouldValidate: true })
                                     }
                                 >
-                                    <SelectTrigger className={cn(errors.parcelType && "border-destructive")}>
+                                    <SelectTrigger className={cn("w-full", errors.parcelType && "border-destructive")}>
                                         <SelectValue placeholder="Select parcel type" />
                                     </SelectTrigger>
                                     <SelectContent>

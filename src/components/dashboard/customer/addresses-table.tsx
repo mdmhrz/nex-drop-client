@@ -1,13 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { MapPin, Phone, Star, Pencil, Trash2, Check } from "lucide-react";
+import { Pencil, Trash2, Check } from "lucide-react";
 import type { ColumnDef } from "@tanstack/react-table";
 import type { PaginationState } from "@tanstack/react-table";
 import { DataTable } from "@/components/shared/data-table/data-table";
 import { useAddresses, useAddressMutations, type Address } from "@/hooks/use-addresses";
-import { Badge } from "@/components/ui/badge";
 import { TableActionDropdown, type TableAction } from "@/components/shared/table-action-dropdown";
+import { StatusBadge } from "@/components/shared/status-badge";
 import { AddressFormModal } from "./address-form-modal";
 import { DeleteAddressDialog } from "./delete-address-dialog";
 
@@ -63,7 +63,6 @@ export function AddressesTable() {
       header: "Address",
       cell: ({ row }) => (
         <div className="flex items-start gap-2">
-          <MapPin className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0" />
           <span className="text-sm">{row.original.address}</span>
         </div>
       ),
@@ -80,7 +79,6 @@ export function AddressesTable() {
       header: "Phone",
       cell: ({ row }) => (
         <div className="flex items-center gap-2">
-          <Phone className="h-4 w-4 text-muted-foreground shrink-0" />
           <span className="text-sm">{row.original.phone || "—"}</span>
         </div>
       ),
@@ -91,12 +89,9 @@ export function AddressesTable() {
       cell: ({ row }) => {
         const isDefault = row.original.isDefault;
         return isDefault ? (
-          <Badge variant="default" className="gap-1">
-            <Star className="h-3 w-3 fill-current" />
-            Default
-          </Badge>
+          <StatusBadge status="active">Default</StatusBadge>
         ) : (
-          <Badge variant="outline">No</Badge>
+          <StatusBadge status="inactive">No</StatusBadge>
         );
       },
     },

@@ -6,6 +6,8 @@ export interface Address {
   label: string;
   address: string;
   district: string;
+  upazila: string;
+  thana: string | null;
   phone: string | null;
   isDefault: boolean;
   createdAt: string;
@@ -35,6 +37,8 @@ export interface CreateAddressInput {
   label: string;
   address: string;
   district: string;
+  upazila: string;
+  thana?: string;
   phone?: string;
   isDefault?: boolean;
 }
@@ -49,6 +53,8 @@ export interface UpdateAddressInput {
   label?: string;
   address?: string;
   district?: string;
+  upazila?: string;
+  thana?: string;
   phone?: string;
   isDefault?: boolean;
 }

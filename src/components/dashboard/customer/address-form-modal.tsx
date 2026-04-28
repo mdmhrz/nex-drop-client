@@ -12,21 +12,31 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import { useAddressMutations, type Address, type CreateAddressInput, type UpdateAddressInput } from "@/hooks/use-addresses";
-import { cn } from "@/lib/utils";
 import { SubmitButton } from "@/components/shared/submit-button";
-import { Check } from "lucide-react";
+import { InputField } from "@/components/shared/input-field";
+import { BangladeshAddressSelector } from "@/components/shared/bangladesh-address-selector";
+import { Check, Tag, Phone } from "lucide-react";
 
-const addressSchema = z.object({
-  label: z.string().min(1, "Label is required").max(255, "Label must be 255 characters or less"),
-  address: z.string().min(1, "Address is required").max(500, "Address must be 500 characters or less"),
-  district: z.string().min(1, "District is required").max(255, "District must be 255 characters or less"),
-  phone: z.string().optional(),
-  isDefault: z.boolean().optional(),
-});
+const addressSchema = z
+  .object({
+    label: z.string().min(1, "Label is required").max(255, "Label must be 255 characters or less"),
+    addressText: z.string().max(300, "Max 300 characters").optional(),
+    district: z.string().min(1, "District is required").max(255, "District must be 255 characters or less"),
+    upazila: z.string().max(255, "Upazila must be 255 characters or less").optional(),
+    thana: z.string().max(255, "Thana must be 255 characters or less").optional(),
+    phone: z.string().optional(),
+    isDefault: z.boolean().optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (!data.upazila && !data.thana) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Please select an upazila or thana",
+        path: ["upazila"],
+      });
+    }
+  });
 
 type AddressFormData = z.infer<typeof addressSchema>;
 
@@ -43,35 +53,50 @@ export function AddressFormModal({ address, open, onOpenChange }: AddressFormMod
   const {
     register,
     handleSubmit,
+    setValue,
+    watch,
     reset,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<AddressFormData>({
     resolver: zodResolver(addressSchema),
+    mode: "onChange",
     defaultValues: address
       ? {
-          label: address.label,
-          address: address.address,
-          district: address.district,
-          phone: address.phone || "",
-          isDefault: address.isDefault,
-        }
+        label: address.label,
+        addressText: address.address,
+        district: address.district,
+        upazila: address.upazila,
+        thana: address.thana || "",
+        phone: address.phone || "",
+        isDefault: address.isDefault,
+      }
       : {
-          label: "",
-          address: "",
-          district: "",
-          phone: "",
-          isDefault: false,
-        },
+        label: "",
+        addressText: "",
+        district: "",
+        upazila: "",
+        thana: "",
+        phone: "",
+        isDefault: false,
+      },
   });
 
+  const buildAddress = (text: string, upazila?: string, district?: string, thana?: string) =>
+    [text, thana, upazila, district].filter(Boolean).join(", ");
+
   const onSubmit = (data: AddressFormData) => {
+    const submitData = {
+      ...data,
+      address: buildAddress(data.addressText || "", data.upazila, data.district, data.thana),
+    } as CreateAddressInput;
+
     if (isEdit && address) {
       updateAddress({
         id: address.id,
-        input: data as UpdateAddressInput,
+        input: submitData as UpdateAddressInput,
       });
     } else {
-      createAddress(data as CreateAddressInput);
+      createAddress(submitData);
     }
     reset();
     onOpenChange(false);
@@ -95,70 +120,50 @@ export function AddressFormModal({ address, open, onOpenChange }: AddressFormMod
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <Label htmlFor="label">
-                Label <span className="text-destructive">*</span>
-              </Label>
-              <Input
-                id="label"
-                placeholder="e.g., Home, Office"
-                {...register("label")}
-                className={cn(errors.label && "border-destructive")}
-              />
-              {errors.label && <p className="text-sm text-destructive">{errors.label.message}</p>}
-            </div>
+            <InputField
+              label="Label"
+              placeholder="e.g., Home, Office"
+              staticLabel
+              {...register("label")}
+              error={errors.label?.message}
+              required
+            />
 
-            <div className="grid gap-2">
-              <Label htmlFor="address">
-                Address <span className="text-destructive">*</span>
-              </Label>
-              <Input
-                id="address"
-                placeholder="e.g., House 12, Road 5, Dhanmondi"
-                {...register("address")}
-                className={cn(errors.address && "border-destructive")}
-              />
-              {errors.address && <p className="text-sm text-destructive">{errors.address.message}</p>}
-            </div>
+            <BangladeshAddressSelector
+              addressTextValue={watch("addressText")}
+              onAddressTextChange={(val) => setValue("addressText", val)}
+              addressTextError={errors.addressText?.message}
+              districtValue={watch("district")}
+              onDistrictChange={(val) => setValue("district", val, { shouldValidate: true })}
+              districtError={errors.district?.message}
+              upazilaValue={watch("upazila")}
+              onUpazilaChange={(val) => setValue("upazila", val, { shouldValidate: true })}
+              upazilaError={errors.upazila?.message}
+              thanaValue={watch("thana")}
+              onThanaChange={(val) => setValue("thana", val)}
+              thanaError={errors.thana?.message}
+            />
 
-            <div className="grid gap-2">
-              <Label htmlFor="district">
-                District <span className="text-destructive">*</span>
-              </Label>
-              <Input
-                id="district"
-                placeholder="e.g., Dhaka"
-                {...register("district")}
-                className={cn(errors.district && "border-destructive")}
-              />
-              {errors.district && <p className="text-sm text-destructive">{errors.district.message}</p>}
-            </div>
+            <InputField
+              label="Phone"
+              placeholder="e.g., 01712345678"
+              staticLabel
+              {...register("phone")}
+              error={errors.phone?.message}
+            />
 
-            <div className="grid gap-2">
-              <Label htmlFor="phone">Phone (Optional)</Label>
-              <Input
-                id="phone"
-                placeholder="e.g., 01712345678"
-                {...register("phone")}
-              />
-            </div>
-
-            <div className="flex items-center space-x-2">
-              <Switch id="isDefault" {...register("isDefault")} />
-              <Label htmlFor="isDefault" className="cursor-pointer">
-                Set as default address
-              </Label>
-            </div>
           </div>
-          <DialogFooter>
+          <DialogFooter className="flex items-center justify-center gap-4">
             <Button type="button" variant="outline" onClick={handleClose}>
               Cancel
             </Button>
             <SubmitButton
+              // disabled={!isValid}
               isPending={isCreating || isUpdating}
               pendingLabel={isEdit ? "Updating..." : "Creating..."}
               icon={Check}
               type="submit"
+              className="w-auto py-4"
             >
               {isEdit ? "Update Address" : "Add Address"}
             </SubmitButton>
