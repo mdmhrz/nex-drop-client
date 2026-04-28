@@ -130,7 +130,7 @@ export function DataTable<TData extends RowData>({
                             <span className="sr-only">Open actions</span>
                         </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-40">
+                    <DropdownMenuContent align="end" className="w-40 p-2">
                         {actions?.onView && (
                             <>
                                 <DropdownMenuItem
