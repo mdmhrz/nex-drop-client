@@ -55,11 +55,11 @@ const socialLinks = [
 const paymentMethods = [
     {
         name: 'Stripe',
-        path: '/payment-methods/stripe.png',
+        path: '/payment-methods/stripe.svg',
     },
     {
         name: 'SSLCommerz',
-        path: '/payment-methods/sslcommerz.png',
+        path: '/payment-methods/sslcommerz.svg',
     },
 ];
 

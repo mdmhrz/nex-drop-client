@@ -17,6 +17,16 @@ export type ParcelStatus =
     | "DELIVERED"
     | "CANCELLED";
 
+export type ParcelType = "DOCUMENT" | "SMALL" | "MEDIUM" | "LARGE" | "FRAGILE" | "ELECTRONICS";
+
+export type ServiceType = "STANDARD" | "EXPRESS";
+
+export interface PriceBreakdown {
+    base: number;
+    typeSurcharge: number;
+    weightSurcharge: number;
+}
+
 export interface Parcel {
     id: string;
     trackingId: string;
@@ -26,8 +36,12 @@ export interface Parcel {
     deliveryAddress: string;
     districtFrom: string;
     districtTo: string;
+    weight: number;
+    parcelType: ParcelType;
+    serviceType: ServiceType;
     status: ParcelStatus;
     price: number;
+    priceBreakdown?: PriceBreakdown;
     isPaid: boolean;
     createdAt: string;
     updatedAt: string;
@@ -78,6 +92,23 @@ export interface ParcelActionResponse {
     data: Parcel;
 }
 
+export interface CreateParcelInput {
+    pickupAddress: string;
+    deliveryAddress: string;
+    districtFrom: string;
+    districtTo: string;
+    weight: number;
+    parcelType: ParcelType;
+    serviceType?: ServiceType;
+    note?: string;
+}
+
+export interface CreateParcelResponse {
+    success: boolean;
+    message: string;
+    data: Parcel;
+}
+
 // ─── Service ─────────────────────────────────────────────────────────────────
 
 export const parcelService = {
@@ -101,5 +132,8 @@ export const parcelService = {
     },
     deliverParcel: (id: string, params: ParcelActionParams = {}): Promise<ParcelActionResponse> => {
         return api.patch<ParcelActionResponse>(`/parcels/${id}/deliver`, params);
+    },
+    createParcel: (input: CreateParcelInput): Promise<CreateParcelResponse> => {
+        return api.post<CreateParcelResponse>("/parcels", input);
     },
 };

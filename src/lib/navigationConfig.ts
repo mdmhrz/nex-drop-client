@@ -145,13 +145,13 @@ export const navigationConfig: Record<UserRole, RoleNavigationConfig> = {
                         roles: [UserRole.CUSTOMER],
                         description: "Manage addresses",
                     },
-                    {
-                        name: "Payments",
-                        href: "/dashboard/payments",
-                        icon: CreditCard,
-                        roles: [UserRole.CUSTOMER],
-                        description: "View payments",
-                    },
+                    // {
+                    //     name: "Payments",
+                    //     href: "/dashboard/payments",
+                    //     icon: CreditCard,
+                    //     roles: [UserRole.CUSTOMER],
+                    //     description: "View payments",
+                    // },
                 ],
             },
             {
@@ -163,14 +163,7 @@ export const navigationConfig: Record<UserRole, RoleNavigationConfig> = {
                         icon: User,
                         roles: [UserRole.CUSTOMER],
                         description: "Edit profile",
-                    },
-                    {
-                        name: "Settings",
-                        href: "/dashboard/settings",
-                        icon: Settings,
-                        roles: [UserRole.CUSTOMER],
-                        description: "Account settings",
-                    },
+                    }
                 ],
             },
         ],

@@ -101,7 +101,7 @@ export function DashboardSidebar({ role, mobileOpen, onMobileClose }: DashboardS
       {/* Desktop sidebar */}
       <aside
         className={cn(
-          "hidden md:flex flex-col border-r bg-card transition-all duration-300 ease-in-out relative shrink-0 sticky top-0 h-screen",
+          "hidden md:flex flex-col border-r bg-muted dark:bg-card transition-all duration-300 ease-in-out relative shrink-0 h-screen",
           collapsed ? "w-14" : "w-64"
         )}
       >

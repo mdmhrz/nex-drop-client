@@ -48,7 +48,7 @@ export default async function RiderDashboardPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Rider Dashboard</h1>
+        <h1 className="section-heading-text text-2xl font-bold tracking-tight">Rider Dashboard</h1>
         <p className="text-muted-foreground">Overview of your delivery performance and earnings.</p>
       </div>
 

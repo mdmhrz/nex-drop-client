@@ -19,18 +19,18 @@ export function DashboardShell({ children, user }: DashboardShellProps) {
     const [mobileOpen, setMobileOpen] = useState(false);
 
     return (
-        <div className="flex min-h-screen bg-background">
+        <div className="flex h-screen bg-background overflow-hidden">
             <DashboardSidebar
                 role={user.role}
                 mobileOpen={mobileOpen}
                 onMobileClose={() => setMobileOpen(false)}
             />
-            <div className="flex flex-1 flex-col min-w-0 overflow-hidden">
+            <div className="flex flex-1 flex-col min-w-0">
                 <DashboardHeader
                     user={user}
                     onMobileMenuOpen={() => setMobileOpen(true)}
                 />
-                <main className="flex-1 p-4 md:p-6 overflow-auto">{children}</main>
+                <main className="flex-1 p-4 md:p-6 overflow-auto custom-scrollbar">{children}</main>
             </div>
         </div>
     );

@@ -3,6 +3,7 @@ import { StatsCardBasic } from "@/components/shared/stats-card-basic";
 import { StatsCardTrend } from "@/components/shared/stats-card-trend";
 import { ChartBarVertical } from "@/components/shared/chart-bar-vertical";
 import { ChartPie } from "@/components/shared/chart-pie";
+import { ChartArea } from "@/components/shared/chart-area";
 import { Package, Wallet, Clock, TrendingUp } from "lucide-react";
 
 export default async function CustomerDashboardPage() {
@@ -44,10 +45,24 @@ export default async function CustomerDashboardPage() {
     },
   };
 
+  // Format area chart data from stats
+  const areaChartData = [
+    { period: "Today", parcels: overview.todayParcels },
+    { period: "This Week", parcels: overview.thisWeekParcels },
+    { period: "This Month", parcels: overview.thisMonthParcels },
+  ];
+
+  const areaChartConfig = {
+    parcels: {
+      label: "Parcels",
+      color: "var(--color-chart-2)",
+    },
+  };
+
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Customer Dashboard</h1>
+        <h1 className="section-heading-text text-2xl font-bold tracking-tight">Customer Dashboard</h1>
         <p className="text-muted-foreground">Overview of your parcels and spending.</p>
       </div>
 
@@ -102,13 +117,20 @@ export default async function CustomerDashboardPage() {
       </div>
 
       {/* Charts */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 min-h-[400px]">
+        <ChartArea
+          title="Parcel Trends"
+          description="Parcels over time periods"
+          data={areaChartData}
+          dataKey="parcels"
+          xDataKey="period"
+          config={areaChartConfig}
+        />
         <ChartBarVertical
           title="Spending (Last 7 Days)"
           data={barChartData}
           xDataKey="date"
           config={barChartConfig}
-          className="lg:col-span-2"
         />
         <ChartPie
           title={pieChart.title}

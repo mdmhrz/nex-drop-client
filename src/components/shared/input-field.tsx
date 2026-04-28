@@ -15,6 +15,8 @@ interface InputFieldProps extends Omit<React.InputHTMLAttributes<HTMLInputElemen
   showPasswordToggle?: boolean;
   field?: ControllerRenderProps<FieldValues, string>;
   defaultLabelUp?: boolean;
+  /** Renders a static label above the input with no float/transform animation */
+  staticLabel?: boolean;
 }
 
 export function InputField({
@@ -29,6 +31,7 @@ export function InputField({
   showPasswordToggle = false,
   field,
   defaultLabelUp = false,
+  staticLabel = false,
   ...props
 }: InputFieldProps) {
   const [isFocused, setIsFocused] = React.useState(false);
@@ -94,6 +97,56 @@ export function InputField({
   }, []);
 
   const inputType = type === "password" && showPassword ? "text" : type;
+
+  if (staticLabel) {
+    const inputType = type === "password" && showPassword ? "text" : type;
+    return (
+      <div className={cn("space-y-1.5", containerClassName)}>
+        <label htmlFor={inputId} className={cn("text-sm font-medium", error && "text-destructive")}>
+          {label}
+        </label>
+        <div className="relative mt-1">
+          {beforeAppend && (
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+              {beforeAppend}
+            </div>
+          )}
+          <Input
+            id={inputId}
+            ref={internalRef}
+            type={inputType}
+            className={cn(
+              "w-full border border-input bg-background px-3 py-2 text-sm",
+              beforeAppend && "pl-10",
+              (afterAppend || showPasswordToggle) && "pr-10",
+              error && "border-destructive",
+              className
+            )}
+            value={field?.value ?? value}
+            {...field}
+            {...props}
+            onBlur={(e) => { field?.onBlur(); props.onBlur?.(e); }}
+            onChange={(e) => { field?.onChange(e); props.onChange?.(e); }}
+          />
+          {showPasswordToggle && type === "password" && (
+            <button
+              type="button"
+              className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+            </button>
+          )}
+          {afterAppend && !showPasswordToggle && (
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+              {afterAppend}
+            </div>
+          )}
+        </div>
+        {error && <p className="text-xs text-destructive">{error}</p>}
+      </div>
+    );
+  }
 
   return (
     <div className={cn("relative", containerClassName)}>

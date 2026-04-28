@@ -1,8 +1,19 @@
-export default function CustomerAddressesPage() {
+import { HydrationBoundary, dehydrate, QueryClient } from "@tanstack/react-query";
+import { ADDRESSES_KEY } from "@/hooks/use-addresses";
+import { getAddresses } from "@/services/address.server";
+import { AddressesPageContent } from "@/components/dashboard/customer/addresses-page-content";
+
+export default async function CustomerAddressesPage() {
+    const queryClient = new QueryClient();
+
+    await queryClient.prefetchQuery({
+        queryKey: [...ADDRESSES_KEY, { page: 1, limit: 10 }],
+        queryFn: () => getAddresses({ page: 1, limit: 10 }),
+    });
+
     return (
-        <div>
-            <h1 className="text-2xl font-bold mb-4">Addresses</h1>
-            <p className="text-muted-foreground">Manage your saved addresses.</p>
-        </div>
+        <HydrationBoundary state={dehydrate(queryClient)}>
+            <AddressesPageContent />
+        </HydrationBoundary>
     );
 }

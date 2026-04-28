@@ -20,7 +20,7 @@ export function Logo({ showLogo = true, showName = true, className = "", noLink 
           className="h-8 w-8"
         />
       )}
-      {showName && <span className="text-xl font-bold hover:text-primary transition-all duration-300 font-nevera">NexDrop</span>}
+      {showName && <span className="text-xl section-heading-text font-bold hover:text-primary transition-all duration-300 font-nevera">NexDrop</span>}
     </>
   );
 

@@ -7,9 +7,13 @@ import { BecomeAMerchant } from "@/components/home/become-a-merchant/become-a-me
 import Testimonials from "@/components/home/testimonials/testimonials";
 import FaqSection from "@/components/home/faq/faq";
 
+export const metadata = {
+  title: "NexDrop",
+}
+
 export default function HomePage() {
   return (
-    <div className="flex min-h-svh flex-col px-6 lg:px-0 pt-28">    
+    <div className="flex min-h-svh flex-col px-6 lg:px-0 pt-28">
       <Banner />
       <HowItWorks />
       <OurServices />
@@ -18,7 +22,7 @@ export default function HomePage() {
       <BecomeAMerchant />
       <Testimonials />
       <FaqSection />
-    
+
     </div>
   );
 }
