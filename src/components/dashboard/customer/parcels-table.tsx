@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon, X, Eye, XCircle, CreditCard } from "lucide-react";
 import type { ColumnDef } from "@tanstack/react-table";
@@ -25,7 +26,7 @@ import { CancelParcelDialog } from "./cancel-parcel-dialog";
 
 // ─── Column definitions ───────────────────────────────────────────────────────
 
-const getColumns = (onCancel: (parcel: Parcel) => void, onPay: (parcel: Parcel) => void): ColumnDef<Parcel>[] => [
+const getColumns = (onCancel: (parcel: Parcel) => void, onPay: (parcel: Parcel) => void, onView: (parcel: Parcel) => void): ColumnDef<Parcel>[] => [
   {
     accessorKey: "trackingId",
     header: "Tracking ID",
@@ -111,10 +112,7 @@ const getColumns = (onCancel: (parcel: Parcel) => void, onPay: (parcel: Parcel) 
         {
           label: "View Details",
           icon: <Eye className="size-4" />,
-          onClick: () => {
-            // TODO: Implement view details functionality
-            console.log("View details:", parcel);
-          },
+          onClick: () => onView(parcel),
         },
       ];
 
@@ -142,6 +140,7 @@ const getColumns = (onCancel: (parcel: Parcel) => void, onPay: (parcel: Parcel) 
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export function ParcelsTable() {
+  const router = useRouter();
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -180,7 +179,11 @@ export function ParcelsTable() {
     setSelectedParcelForPayment(parcel);
   };
 
-  const columns = getColumns(handleCancel, handlePay);
+  const handleView = (parcel: Parcel) => {
+    router.push(`/dashboard/parcels/${parcel.id}`);
+  };
+
+  const columns = getColumns(handleCancel, handlePay, handleView);
 
   const resetFilters = () => {
     setStatus("ALL");

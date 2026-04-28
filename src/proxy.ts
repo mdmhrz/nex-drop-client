@@ -32,6 +32,32 @@ export async function proxy(request: NextRequest) {
     console.log(`Is Auth Route: ${authRoute}`);
     console.log(`Is Valid Token: ${isValidAccessToken}`);
 
+    // Protect payment pages: require a valid accessToken and a session_id query param
+    if (pathname.startsWith("/payment")) {
+        // Allow showing the fail page to give users a reason
+        if (pathname === "/payment/fail") {
+            return NextResponse.next();
+        }
+
+        const sessionId = request.nextUrl.searchParams.get("session_id");
+
+        // If user is not authenticated, send them to login
+        if (!isValidAccessToken || !userRole) {
+            const loginUrl = new URL("/login", request.url);
+            loginUrl.searchParams.set("redirect", pathname);
+            return NextResponse.redirect(loginUrl);
+        }
+
+        // If session_id missing, show an unauthorized/fail page
+        if (!sessionId) {
+            const failUrl = new URL("/payment/fail", request.url);
+            failUrl.searchParams.set("error", "Missing session_id");
+            return NextResponse.redirect(failUrl);
+        }
+
+        return NextResponse.next();
+    }
+
     // Be a Rider: public route but blocked for riders
     if (pathname === "/be-a-rider" || pathname.startsWith("/be-a-rider/")) {
         if (isValidAccessToken && userRole === "RIDER") {
