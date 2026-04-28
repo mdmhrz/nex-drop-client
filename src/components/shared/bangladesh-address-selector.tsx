@@ -116,7 +116,7 @@ export function BangladeshAddressSelector({
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {/* District */}
         <div className="space-y-1.5">
-          <Label className={cn(districtError && "text-destructive")}>
+          <Label className={cn("text-sm font-medium", districtError && "text-destructive")}>
             {districtLabel} {districtRequired && <span className="text-destructive">*</span>}
           </Label>
           <DistrictCombobox
@@ -131,7 +131,7 @@ export function BangladeshAddressSelector({
 
         {/* Upazila or Thana */}
         <div className="space-y-1.5">
-          <Label className={cn((hasThana ? thanaError : upazilaError) && "text-destructive")}>
+          <Label className={cn("text-sm font-medium", (hasThana ? thanaError : upazilaError) && "text-destructive")}>
             {hasThana ? thanaLabel : upazilaLabel} {(hasThana ? thanaRequired : upazilaRequired) && <span className="text-destructive">*</span>}
           </Label>
           <Select

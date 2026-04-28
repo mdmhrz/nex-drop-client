@@ -105,7 +105,7 @@ export function InputField({
         <label htmlFor={inputId} className={cn("text-sm font-medium", error && "text-destructive")}>
           {label}
         </label>
-        <div className="relative">
+        <div className="relative mt-1">
           {beforeAppend && (
             <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
               {beforeAppend}

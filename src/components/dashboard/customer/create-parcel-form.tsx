@@ -348,7 +348,7 @@ export function CreateParcelForm() {
                                 step={0.1}
                             />
                             <div className="space-y-1.5">
-                                <Label className={cn(errors.parcelType && "text-destructive")}>
+                                <Label className={cn("text-sm font-medium", errors.parcelType && "text-destructive")}>
                                     Parcel Type <span className="text-destructive">*</span>
                                 </Label>
                                 <Select
