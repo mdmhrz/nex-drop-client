@@ -53,11 +53,12 @@ export function Banner() {
     const slide = slides[index];
 
     return (
-        <section className="relative w-full overflow-hidden rounded-2xl max-w-7xl mx-auto">
+        <section className="relative w-full overflow-hidden rounded-2xl max-w-7xl mx-auto shadow-lg border border-border dark:border-white/10">
             {/* ── Code-built background ── */}
-            <div className="absolute inset-0 bg-[#faf9ee]" />
-            <div className="banner-bg-diagonal absolute inset-0 bg-primary/50" />
-            <div className="absolute -right-16 -top-16 h-64 w-64 rounded-full bg-primary/20 blur-3xl" />
+            <div className="absolute inset-0 bg-background" />
+            <div className="banner-bg-diagonal absolute inset-0 bg-primary/30 dark:bg-primary/50" />
+            <div className="absolute -right-16 -top-16 dark:inset-0 h-64 w-64 rounded-full bg-primary/20 blur-3xl" />
+            <div className="absolute -right-16 -top-16 light:inset-0 h-64 w-64 rounded-full bg-primary/20 blur-3xl" />
 
             {/* ── Content row ── */}
             <div className="relative flex flex-col h-80 sm:h-96 md:h-112 lg:h-128 sm:flex-row">
@@ -73,7 +74,7 @@ export function Banner() {
                             alt="Delivery person"
                             width={120}
                             height={36}
-                            className="h-full w-auto object-contain"
+                            className="h-full w-auto object-contain logo-adaptive"
                         />
 
                     </div>
@@ -85,13 +86,13 @@ export function Banner() {
                             initial={{ opacity: 0, x: -28 }}
                             animate={{ opacity: 1, x: 0, transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] as const } }}
                             exit={{ opacity: 0, x: -20, transition: { duration: 0.3, ease: [0.55, 0.055, 0.675, 0.19] as const } }}
-                            className="text-2xl font-bold leading-tight text-[#0d3b2e] sm:text-3xl md:text-4xl  lg:text-5xl"
+                            className="text-2xl font-bold leading-tight text-foreground sm:text-3xl md:text-4xl  lg:text-5xl"
                         >
                             {slide.heading.map((part, i) =>
                                 part.text.split("\n").map((line, j) => (
                                     <span key={`${i}-${j}`}>
                                         {j > 0 && <br />}
-                                        <span className={part.highlight ? "text-primary" : "text-[#0d3b2e]"}>
+                                        <span className={part.highlight ? "text-primary" : "text-foreground"}>
                                             {line}
                                         </span>
                                     </span>
@@ -107,7 +108,7 @@ export function Banner() {
                                 key={i}
                                 onClick={() => setIndex(i)}
                                 aria-label={`Go to slide ${i + 1}`}
-                                className={`h-0.5 w-7 rounded-sm transition-colors duration-300 ${i === index ? "bg-[#0d3b2e]" : "bg-[#0d3b2e]/30"
+                                className={`h-0.5 w-7 rounded-sm transition-colors duration-300 ${i === index ? "bg-foreground" : "bg-foreground/30"
                                     }`}
                             />
                         ))}

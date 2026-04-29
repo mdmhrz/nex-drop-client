@@ -20,16 +20,16 @@ export function Logo({ showLogo = true, showName = true, className = "", noLink 
           className="h-8 w-8"
         />
       )}
-      {showName && <span className="text-xl section-heading-text font-bold hover:text-primary transition-all duration-300 font-nevera">NexDrop</span>}
+      {showName && <span className="text-xl dark:text-white light:section-heading-text font-bold hover:text-primary transition-all duration-300 font-nevera">NexDrop</span>}
     </>
   );
 
   if (noLink) {
-    return <div className={`flex items-center space-x-2 ${className}`}>{content}</div>;
+    return <div className={`flex items-center space-x-2  ${className}`}>{content}</div>;
   }
 
   return (
-    <Link href="/" className={`flex items-center space-x-2 ${className}`}>
+    <Link href="/" className={`flex items-center space-x-2   ${className}`}>
       {content}
     </Link>
   );

@@ -35,5 +35,6 @@ export function useRiderProfile() {
         queryKey: RIDER_PROFILE_KEY,
         queryFn: () => api.get<RiderProfileResponse>("/rider/me"),
         staleTime: Infinity, // Keep data stale until manually invalidated
+        retry: false,
     });
 }

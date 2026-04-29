@@ -13,7 +13,7 @@ export const metadata = {
 
 export default function HomePage() {
   return (
-    <div className="flex min-h-svh flex-col px-6 lg:px-0 pt-28">
+    <div className="flex min-h-svh flex-col px-6 lg:px-0 ">
       <Banner />
       <HowItWorks />
       <OurServices />

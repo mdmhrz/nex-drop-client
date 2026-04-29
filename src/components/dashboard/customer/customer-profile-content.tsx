@@ -20,6 +20,7 @@ import { SubmitButton } from "@/components/shared/submit-button";
 import { Check } from "lucide-react";
 import React from "react";
 import { CustomerProfileSkeleton } from "./customer-profile-skeleton";
+import { RiderApplicationCard } from "./rider-application-card";
 
 const editProfileSchema = z.object({
   name: z.string().min(1, "Name is required").max(255, "Name must be 255 characters or less"),
@@ -187,6 +188,8 @@ export function CustomerProfileContent() {
           </CardContent>
         </Card>
       </div>
+
+      <RiderApplicationCard />
 
       {/* Edit Profile Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
