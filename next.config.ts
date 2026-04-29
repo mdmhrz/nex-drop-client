@@ -10,6 +10,10 @@ const nextConfig: NextConfig = {
                 source: "/api/v1/auth/:path*",
                 destination: `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/v1/auth/:path*`,
             },
+            {
+                source: "/api/:path*",
+                destination: `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/:path*`,
+            },
         ];
     }
 };
