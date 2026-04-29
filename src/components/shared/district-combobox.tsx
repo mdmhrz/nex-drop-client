@@ -25,6 +25,7 @@ interface DistrictComboboxProps {
     placeholder?: string;
     error?: boolean;
     disabled?: boolean;
+    className?: string
 }
 
 export function DistrictCombobox({
@@ -34,6 +35,7 @@ export function DistrictCombobox({
     placeholder = "Select district",
     error = false,
     disabled = false,
+    className
 }: DistrictComboboxProps) {
     const [open, setOpen] = React.useState(false);
 
@@ -48,7 +50,8 @@ export function DistrictCombobox({
                     className={cn(
                         "w-full justify-between font-normal",
                         !value && "text-muted-foreground",
-                        error && "border-destructive"
+                        error && "border-destructive",
+                        className
                     )}
                 >
                     {value || placeholder}
