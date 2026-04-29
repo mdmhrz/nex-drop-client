@@ -1,13 +1,12 @@
-"use client";
-
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
-import { Calendar as CalendarIcon, X, Eye, XCircle, CreditCard } from "lucide-react";
+import { Calendar as CalendarIcon, X, Eye, XCircle, CreditCard, Star } from "lucide-react";
 import type { ColumnDef } from "@tanstack/react-table";
 import type { PaginationState } from "@tanstack/react-table";
 import { DataTable } from "@/components/shared/data-table";
 import { useParcels, useCancelParcel, type Parcel } from "@/hooks/use-parcels";
+import { useMyRatings, type MyRating } from "@/hooks/use-ratings";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -23,119 +22,137 @@ import { TableActionDropdown } from "@/components/shared/table-action-dropdown";
 import { cn } from "@/lib/utils";
 import { PaymentModal } from "./payment-modal";
 import { CancelParcelDialog } from "./cancel-parcel-dialog";
+import { RateParcelDialog } from "./rate-parcel-dialog";
 
 // ─── Column definitions ───────────────────────────────────────────────────────
 
-const getColumns = (onCancel: (parcel: Parcel) => void, onPay: (parcel: Parcel) => void, onView: (parcel: Parcel) => void): ColumnDef<Parcel>[] => [
-  {
-    accessorKey: "trackingId",
-    header: "Tracking ID",
-    cell: ({ row }) => (
-      <span className="font-mono text-xs font-medium">{row.original.trackingId}</span>
-    ),
-  },
-  {
-    accessorKey: "pickupAddress",
-    header: "Pickup",
-    cell: ({ row }) => (
-      <span className="text-sm">{row.original.pickupAddress}</span>
-    ),
-  },
-  {
-    accessorKey: "deliveryAddress",
-    header: "Delivery",
-    cell: ({ row }) => (
-      <span className="text-sm">{row.original.deliveryAddress}</span>
-    ),
-  },
-  {
-    accessorKey: "price",
-    header: "Price",
-    cell: ({ row }) => (
-      <span className="font-medium">৳ {row.original.price.toFixed(2)}</span>
-    ),
-  },
-  {
-    accessorKey: "status",
-    header: "Status",
-    cell: ({ getValue }) => {
-      const status = getValue<string>();
-      const statusMap: Record<string, { status: "success" | "warning" | "error" | "default" }> = {
-        REQUESTED: { status: "default" },
-        ASSIGNED: { status: "warning" },
-        PICKED: { status: "warning" },
-        IN_TRANSIT: { status: "warning" },
-        DELIVERED: { status: "success" },
-        CANCELLED: { status: "error" },
-      };
-      return (
-        <StatusBadge status={statusMap[status]?.status ?? "default"} variant="default">
-          {status}
-        </StatusBadge>
-      );
+const getColumns = (
+  onCancel: (parcel: Parcel) => void,
+  onPay: (parcel: Parcel) => void,
+  onView: (parcel: Parcel) => void,
+  onRate: (parcel: Parcel) => void,
+  ratingByParcelId: Map<string, MyRating>
+): ColumnDef<Parcel>[] => [
+    {
+      accessorKey: "trackingId",
+      header: "Tracking ID",
+      cell: ({ row }) => (
+        <span className="font-mono text-xs font-medium">{row.original.trackingId}</span>
+      ),
     },
-  },
-  {
-    accessorKey: "isPaid",
-    header: "Paid",
-    cell: ({ getValue }) => {
-      const isPaid = getValue<boolean>();
-      return (
-        <StatusBadge status={isPaid ? "success" : "default"} variant="outline">
-          {isPaid ? "Yes" : "No"}
-        </StatusBadge>
-      );
+    {
+      accessorKey: "pickupAddress",
+      header: "Pickup",
+      cell: ({ row }) => (
+        <span className="text-sm">{row.original.pickupAddress}</span>
+      ),
     },
-  },
-  {
-    accessorKey: "createdAt",
-    header: "Created At",
-    cell: ({ getValue }) => (
-      <span className="text-xs text-muted-foreground">
-        {new Date(getValue<string>()).toLocaleDateString("en-BD", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-        })}
-      </span>
-    ),
-  },
-  {
-    id: "actions",
-    header: () => <span className="sr-only">Actions</span>,
-    enableSorting: false,
-    cell: ({ row }) => {
-      const parcel = row.original;
-      const actions = [
-        {
-          label: "View Details",
-          icon: <Eye className="size-4" />,
-          onClick: () => onView(parcel),
-        },
-      ];
-
-      if (parcel.status === "REQUESTED") {
-        actions.push({
-          label: "Cancel Parcel",
-          icon: <XCircle className="size-4" />,
-          onClick: () => onCancel(parcel),
-        });
-      }
-
-      if (!parcel.isPaid && parcel.status !== "CANCELLED") {
-        actions.push({
-          label: "Pay Now",
-          icon: <CreditCard className="size-4" />,
-          onClick: () => onPay(parcel),
-        });
-      }
-
-      return <TableActionDropdown actions={actions} />;
+    {
+      accessorKey: "deliveryAddress",
+      header: "Delivery",
+      cell: ({ row }) => (
+        <span className="text-sm">{row.original.deliveryAddress}</span>
+      ),
     },
-  },
-];
+    {
+      accessorKey: "price",
+      header: "Price",
+      cell: ({ row }) => (
+        <span className="font-medium">৳ {row.original.price.toFixed(2)}</span>
+      ),
+    },
+    {
+      accessorKey: "status",
+      header: "Status",
+      cell: ({ getValue }) => {
+        const status = getValue<string>();
+        const statusMap: Record<string, { status: "success" | "warning" | "error" | "default" }> = {
+          REQUESTED: { status: "default" },
+          ASSIGNED: { status: "warning" },
+          PICKED: { status: "warning" },
+          IN_TRANSIT: { status: "warning" },
+          DELIVERED: { status: "success" },
+          CANCELLED: { status: "error" },
+        };
+        return (
+          <StatusBadge status={statusMap[status]?.status ?? "default"} variant="default">
+            {status}
+          </StatusBadge>
+        );
+      },
+    },
+    {
+      accessorKey: "isPaid",
+      header: "Paid",
+      cell: ({ getValue }) => {
+        const isPaid = getValue<boolean>();
+        return (
+          <StatusBadge status={isPaid ? "success" : "default"} variant="outline">
+            {isPaid ? "Yes" : "No"}
+          </StatusBadge>
+        );
+      },
+    },
+    {
+      accessorKey: "createdAt",
+      header: "Created At",
+      cell: ({ getValue }) => (
+        <span className="text-xs text-muted-foreground">
+          {new Date(getValue<string>()).toLocaleDateString("en-BD", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          })}
+        </span>
+      ),
+    },
+    {
+      id: "actions",
+      header: () => <span className="sr-only">Actions</span>,
+      enableSorting: false,
+      cell: ({ row }) => {
+        const parcel = row.original;
+        const actions = [
+          {
+            label: "View Details",
+            icon: <Eye className="size-4" />,
+            onClick: () => onView(parcel),
+          },
+        ];
+
+        if (parcel.status === "DELIVERED") {
+          const alreadyRated = ratingByParcelId.has(parcel.id);
+          actions.push({
+            label: alreadyRated ? "View My Rating" : "Rate Delivery",
+            icon: alreadyRated
+              ? <Star className="size-4 fill-yellow-400 text-yellow-400" />
+              : <Star className="size-4" />,
+            onClick: () => onRate(parcel),
+          });
+        }
+
+        if (parcel.status === "REQUESTED") {
+          actions.push({
+            label: "Cancel Parcel",
+            icon: <XCircle className="size-4" />,
+            onClick: () => onCancel(parcel),
+          });
+        }
+
+        if (!parcel.isPaid && parcel.status !== "CANCELLED") {
+          actions.push({
+            label: "Pay Now",
+            icon: <CreditCard className="size-4" />,
+            onClick: () => onPay(parcel),
+          });
+        }
+
+        return <TableActionDropdown actions={actions} />;
+      },
+    },
+  ];
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
@@ -157,6 +174,17 @@ export function ParcelsTable() {
   });
   const [selectedParcelForPayment, setSelectedParcelForPayment] = useState<Parcel | null>(null);
   const [selectedParcelForCancel, setSelectedParcelForCancel] = useState<Parcel | null>(null);
+  const [selectedParcelForRating, setSelectedParcelForRating] = useState<Parcel | null>(null);
+
+  const { data: myRatingsData } = useMyRatings();
+
+  const ratingByParcelId = useMemo<Map<string, MyRating>>(() => {
+    const map = new Map<string, MyRating>();
+    for (const r of myRatingsData?.data ?? []) {
+      map.set(r.parcelId, r);
+    }
+    return map;
+  }, [myRatingsData]);
 
   const { data, isLoading } = useParcels({
     page: pagination.pageIndex + 1,
@@ -183,7 +211,11 @@ export function ParcelsTable() {
     router.push(`/dashboard/parcels/${parcel.id}`);
   };
 
-  const columns = getColumns(handleCancel, handlePay, handleView);
+  const handleRate = (parcel: Parcel) => {
+    setSelectedParcelForRating(parcel);
+  };
+
+  const columns = getColumns(handleCancel, handlePay, handleView, handleRate, ratingByParcelId);
 
   const resetFilters = () => {
     setStatus("ALL");
@@ -298,6 +330,17 @@ export function ParcelsTable() {
           onOpenChange={(open) => !open && setSelectedParcelForCancel(null)}
           onConfirm={handleConfirmCancel}
           isCancelling={cancelParcelMutation.isPending}
+        />
+      )}
+
+      {selectedParcelForRating && (
+        <RateParcelDialog
+          key={selectedParcelForRating.id}
+          open={!!selectedParcelForRating}
+          onOpenChange={(open) => !open && setSelectedParcelForRating(null)}
+          parcelId={selectedParcelForRating.id}
+          trackingId={selectedParcelForRating.trackingId}
+          existingRating={ratingByParcelId.get(selectedParcelForRating.id) ?? null}
         />
       )}
     </>
