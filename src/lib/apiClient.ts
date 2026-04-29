@@ -1,7 +1,8 @@
 import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from "axios";
 import { env } from "./env";
 
-const API_BASE_URL = `${env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/${env.NEXT_PUBLIC_API_VERSION}`;
+// Use frontend URL to go through Next.js rewrites (same-origin, cookies work)
+const API_BASE_URL = `${env.NEXT_PUBLIC_FRONTEND_BASE_URL}/api/${env.NEXT_PUBLIC_API_VERSION}`;
 
 /* Axios client with interceptors and typed helper methods for API requests */
 
