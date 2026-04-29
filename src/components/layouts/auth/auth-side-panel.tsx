@@ -120,7 +120,7 @@ export function AuthSidePanel({
                 {/* Headline */}
                 <div className="space-y-2 mt-10">
                     <motion.h2
-                        className="text-3xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground"
+                        className="text-3xl md:text-5xl  font-bold tracking-tight text-white"
                         initial={{ opacity: 0, y: 14 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
@@ -128,7 +128,7 @@ export function AuthSidePanel({
                         {title}
                     </motion.h2>
                     <motion.p
-                        className="max-w-xl text-lg md:text-xl lg:text-2xl leading-relaxed text-muted-foreground"
+                        className="max-w-xl text-lg md:text-xl leading-relaxed text-white/50 dark:text-muted-foreground"
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
