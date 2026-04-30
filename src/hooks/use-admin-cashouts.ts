@@ -17,7 +17,7 @@ export type { AdminCashout, AdminCashoutsMeta, AdminCashoutsResponse, GetAdminCa
 export function useAdminCashouts(params: GetAdminCashoutsParams = {}) {
   return useQuery({
     queryKey: [...ADMIN_CASHOUTS_KEY, params],
-    queryFn: () => api.get<AdminCashoutsResponse>("/cashouts", { params }),
+    queryFn: () => api.get<AdminCashoutsResponse>("/rider/cashouts", { params }),
     staleTime: 0,
   });
 }
@@ -27,7 +27,7 @@ export function useUpdateCashoutStatus() {
 
   return useMutation({
     mutationFn: ({ id, params }: { id: string; params: UpdateCashoutStatusParams }) =>
-      api.patch<UpdateCashoutStatusResponse>(`/cashouts/${id}`, params),
+      api.patch<UpdateCashoutStatusResponse>(`/rider/cashouts/${id}`, params),
     onSuccess: (response) => {
       toast.success(response.message || "Cashout status updated successfully");
       queryClient.invalidateQueries({ queryKey: ADMIN_CASHOUTS_KEY });

@@ -122,9 +122,9 @@ export async function updateParcelStatusClient(id: string, params: UpdateParcelS
 // ==================== CASHOUTS ====================
 
 export async function getAllCashoutsClient(params: GetAdminCashoutsParams = {}): Promise<AdminCashoutsResponse> {
-  return api.get<AdminCashoutsResponse>("/cashouts", { params });
+  return api.get<AdminCashoutsResponse>("/rider/cashouts", { params });
 }
 
 export async function updateCashoutStatusClient(id: string, params: UpdateCashoutStatusParams): Promise<UpdateCashoutStatusResponse> {
-  return api.patch<UpdateCashoutStatusResponse>(`/cashouts/${id}`, params);
+  return api.patch<UpdateCashoutStatusResponse>(`/rider/cashouts/${id}`, params);
 }
