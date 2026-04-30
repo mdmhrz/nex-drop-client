@@ -70,3 +70,7 @@ export interface ParcelResponse {
 export async function getParcelById(id: string): Promise<ParcelResponse> {
     return serverFetch<ParcelResponse>(`/parcels/${id}`);
 }
+
+export async function getParcelByTrackingId(trackingId: string): Promise<ParcelResponse> {
+    return serverFetch<ParcelResponse>(`/parcels/track/${trackingId}`);
+}

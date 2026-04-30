@@ -10,7 +10,7 @@ export const NAV_ITEMS: NavItem[] = [
     { label: "About", href: "/about" },
     { label: "Coverage", href: "/coverage" },
     { label: "Contact", href: "/contact" },
-    { label: "Track Order", href: "/track-order", requiresAuth: true },
+    { label: "Track Order", href: "/track-order" },
     { label: "Be a Rider", href: "/be-a-rider", prohibitedRoles: ["RIDER"] },
 ];
 

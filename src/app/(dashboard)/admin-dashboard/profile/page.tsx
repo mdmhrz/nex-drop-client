@@ -2,9 +2,9 @@ import { HydrationBoundary, dehydrate, QueryClient } from "@tanstack/react-query
 import { CUSTOMER_PROFILE_KEY } from "@/hooks/use-customer-profile";
 
 import { authService } from "@/services/auth.service";
-import { SettingsContent } from "@/components/shared/settings-content";
+import { AdminProfileContent } from "@/components/dashboard/admin/admin-profile-content";
 
-export default async function AdminSettingsPage() {
+export default async function AdminProfilePage() {
     const queryClient = new QueryClient();
 
     await queryClient.prefetchQuery({
@@ -12,12 +12,9 @@ export default async function AdminSettingsPage() {
         queryFn: () => authService.getMe(),
     });
 
-    const prefetched = queryClient.getQueryData(CUSTOMER_PROFILE_KEY) as { data: { role: string } } | undefined;
-    const userRole = prefetched?.data?.role as "CUSTOMER" | "ADMIN" | "RIDER" | "SUPER_ADMIN" | undefined;
-
     return (
         <HydrationBoundary state={dehydrate(queryClient)}>
-            <SettingsContent userRole={userRole || "ADMIN"} />
+            <AdminProfileContent />
         </HydrationBoundary>
     );
 }
