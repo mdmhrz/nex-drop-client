@@ -25,6 +25,7 @@ export async function logoutAction() {
     // Delete cookies directly on the Next.js server — no domain mismatch.
     cookieStore.delete("accessToken");
     cookieStore.delete("refreshToken");
+    cookieStore.delete("better-auth.session_token");
 
     redirect("/login");
 }

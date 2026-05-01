@@ -79,6 +79,8 @@ apiClient.interceptors.response.use(
         return apiClient(originalConfig);
       } catch (refreshError) {
         processQueue(refreshError);
+        // Clear httpOnly cookies (JS can't do this directly) then redirect
+        await fetch("/api/auth/logout", { method: "POST", credentials: "include" }).catch(() => { });
         window.location.href = "/login";
         return Promise.reject(refreshError);
       } finally {

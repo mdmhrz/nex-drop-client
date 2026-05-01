@@ -28,7 +28,7 @@ async function tryRefreshTokens(request: NextRequest): Promise<FreshTokens | nul
 
     try {
         const res = await fetch(
-            `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/v1/auth/refresh-token`,
+            `${process.env.NEXT_PUBLIC_FRONTEND_BASE_URL}/api/v1/auth/refresh-token`,
             {
                 method: "POST",
                 headers: {
@@ -78,7 +78,7 @@ export async function proxy(request: NextRequest) {
     }
     // ──────────────────────────────────────────────────────────────────────
 
-    const isValidAccessToken = !!decoded;
+    const isValidAccessToken = !!decoded && (decoded.exp ?? 0) > now;
     const rawRole = decoded?.role as UserRole | undefined;
     const userRole: UserRole | null = rawRole || null;
     const emailVerified = decoded?.emailVerified ?? false;
