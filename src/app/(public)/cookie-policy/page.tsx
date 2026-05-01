@@ -90,7 +90,7 @@ export default function CookiePolicyPage() {
                         Manage Your Cookie Preferences
                     </h3>
                     <p className="text-sm text-muted-foreground leading-relaxed">
-                        You can adjust your cookie preferences at any time through your browser settings or by contacting our privacy team. We're committed to transparency and your control over your data.
+                        You can adjust your cookie preferences at any time through your browser settings or by contacting our privacy team. We&apos;re committed to transparency and your control over your data.
                     </p>
                 </div>
             </div>

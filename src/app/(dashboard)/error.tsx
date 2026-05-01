@@ -1,7 +1,7 @@
 'use client';
 
 import Link from "next/link";
-import { AlertTriangle, Home, LayoutDashboard, ArrowLeft } from "lucide-react";
+import { AlertTriangle, Home, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/shared/logo";
 import { useEffect } from "react";

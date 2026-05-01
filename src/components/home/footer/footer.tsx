@@ -110,6 +110,7 @@ const Footer = () => {
             // If successful, redirect to create parcel
             router.push('/dashboard/create-parcel');
         } catch (error) {
+            console.log(error, "Error fetching user data");
             // If error, user is not authenticated
             toast.error('Please login first', {
                 description: 'You need to be logged in to send a parcel.',
@@ -177,7 +178,7 @@ const Footer = () => {
                                         We Support
                                     </h3>
                                     <div className="flex gap-4">
-                                        {paymentMethods.map((method, i) => (
+                                        {paymentMethods.map((method) => (
                                             <motion.div
                                                 key={method.name}
                                                 whileHover={{ scale: 1.1 }}
