@@ -55,7 +55,7 @@ const cardVariants = {
 
 export function HowItWorks() {
     return (
-        <SectionWrapper>
+        <section className="max-w-7xl mx-auto px-4 xl:px-0 py-10 md:py-20 lg:py-28">
             {/* Section Header */}
             <SectionHeader
                 title="How It Works"
@@ -79,7 +79,7 @@ export function HowItWorks() {
                             variants={cardVariants}
                             className="h-full"
                         >
-                            <Card className="group dark:border dark:border-border relative bg-card/50 backdrop-blur-sm p-4 text-center transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:bg-card sm:p-5 overflow-hidden cursor-pointer h-full flex flex-col">
+                            <Card className="group border dark:border-0 relative bg-card/50 backdrop-blur-sm p-4 text-center transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:bg-card sm:p-5 overflow-hidden cursor-pointer h-full flex flex-col">
                                 {/* Icon container */}
                                 <div className="mb-3 flex h-16 w-16 items-center justify-center bg-primary/10 transition-transform duration-300 group-hover:scale-110 group-hover:bg-primary/20 mx-auto rounded-lg">
                                     <Icon className="h-8 w-8 text-primary" />
@@ -105,6 +105,6 @@ export function HowItWorks() {
                     );
                 })}
             </motion.div>
-        </SectionWrapper>
+        </section>
     );
 }

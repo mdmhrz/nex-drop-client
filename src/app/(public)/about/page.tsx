@@ -4,7 +4,6 @@ import {
     TabsList,
     TabsTrigger,
 } from "@/components/ui/tabs";
-import { SectionWrapper } from "@/components/home/section-wrapper";
 
 const tabsData = [
     {
@@ -47,8 +46,8 @@ const tabsData = [
 
 export default function AboutPage() {
     return (
-        <SectionWrapper>
-            <div className="space-y-12 pt-10 ">
+        <section className="max-w-7xl mx-auto px-4 xl:px-0 py-10 md:py-20">
+            <div className="space-y-12">
                 {/* Header Section - Left Aligned */}
                 <div className="space-y-4">
                     <h1 className="section-heading-text text-4xl md:text-5xl font-bold tracking-tight">
@@ -121,6 +120,6 @@ export default function AboutPage() {
                     ))}
                 </div>
             </div>
-        </SectionWrapper>
+        </section>
     );
 }

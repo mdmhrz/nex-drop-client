@@ -24,7 +24,7 @@ export default async function HomePage() {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <div className="flex min-h-svh flex-col px-6 lg:px-0 ">
+      <div className="">
         <Banner />
         <HowItWorks />
         <OurServices />

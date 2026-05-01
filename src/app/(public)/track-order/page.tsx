@@ -1,4 +1,4 @@
-import { SectionWrapper } from "@/components/home/section-wrapper";
+
 import { TrackOrderContent } from "@/components/public/track-order-content";
 import { getParcelByTrackingId } from "@/services/parcel.server";
 
@@ -20,8 +20,8 @@ export default async function TrackOrderPage({
     }
 
     return (
-        <SectionWrapper>
+        <section className="max-w-7xl mx-auto px-4 xl:px-0 py-10 md:py-20">
             <TrackOrderContent initialParcel={parcel} initialTrackingId={trackingId || ""} />
-        </SectionWrapper>
+        </section>
     );
 }

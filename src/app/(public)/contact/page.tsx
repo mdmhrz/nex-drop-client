@@ -1,5 +1,4 @@
 import { Mail, MapPin, Phone, Clock } from "lucide-react";
-import { SectionWrapper } from "@/components/home/section-wrapper";
 import { Separator } from "@/components/ui/separator";
 import { ContactForm } from "@/components/contact/contact-form";
 
@@ -32,8 +31,8 @@ const contactDetails = [
 
 export default function ContactPage() {
     return (
-        <SectionWrapper>
-            <div className="space-y-12 pt-0 md:pt-10">
+        <section className="max-w-7xl mx-auto px-4 xl:px-0 py-10 md:py-20">
+            <div className="space-y-12 pt-0">
                 {/* Header */}
                 <div className="space-y-4">
                     <h1 className="section-heading-text text-4xl md:text-5xl font-bold tracking-tight">
@@ -55,7 +54,7 @@ export default function ContactPage() {
                             {contactDetails.map(({ icon: Icon, label, value, sub }) => (
                                 <div
                                     key={label}
-                                    className="flex items-start gap-4 rounded-xl border border-border bg-muted/30 p-5 transition-colors hover:bg-muted/50"
+                                    className="flex items-start gap-4  border bg-muted/30 p-5 transition-colors hover:bg-muted/50"
                                 >
                                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
                                         <Icon className="h-5 w-5 text-primary" />
@@ -74,7 +73,7 @@ export default function ContactPage() {
                         </div>
 
                         {/* FAQ teaser */}
-                        <div className="rounded-xl border border-dashed border-border bg-primary/5 dark:bg-primary/[0.07] p-6 space-y-2">
+                        <div className="border border-dashed bg-primary/5 dark:bg-primary/[0.07] p-6 space-y-2">
                             <h3 className="text-base font-semibold text-foreground">
                                 Looking for quick answers?
                             </h3>
@@ -90,6 +89,6 @@ export default function ContactPage() {
                     <ContactForm />
                 </div>
             </div>
-        </SectionWrapper>
+        </section>
     );
 }

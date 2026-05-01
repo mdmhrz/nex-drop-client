@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import { MapPin, ShieldCheck, Headphones } from "lucide-react";
-import { SectionWrapper } from "@/components/home/section-wrapper";
 
 const features = [
     {
@@ -50,7 +49,7 @@ const featureVariants = {
 
 export function Features() {
     return (
-        <SectionWrapper className="border-t-2 border-b-2 border-dashed section-divider max-w-7xl mx-auto mt-10">
+        <section className="border-t-2 border-b-2 border-dashed  max-w-7xl mx-auto px-4 xl:px-0 py-10 md:py-16 lg:py-20">
             {/* Features List */}
             <motion.div
                 variants={containerVariants}
@@ -65,11 +64,11 @@ export function Features() {
                         <motion.div
                             key={feature.id}
                             variants={featureVariants}
-                            className="flex flex-col md:flex-row items-center gap-6 md:gap-8 p-6 rounded-xl shadow-sm bg-card border border-border"
+                            className="flex flex-col md:flex-row items-center gap-6 md:gap-8 p-6 shadow-sm bg-card border border-border"
                         >
                             {/* Left Icon */}
                             <div className="w-full md:w-auto md:shrink-0 flex justify-center">
-                                <div className="h-40 w-40 md:h-48 md:w-48 flex items-center justify-center rounded-lg bg-primary/10">
+                                <div className="h-40 w-40 md:h-48 md:w-48 flex items-center justify-center bg-primary/10">
                                     <Icon className="h-24 w-24 md:h-32 md:w-32 text-primary" strokeWidth={1.5} />
                                 </div>
                             </div>
@@ -92,6 +91,6 @@ export function Features() {
                     );
                 })}
             </motion.div>
-        </SectionWrapper>
+        </section>
     );
 }

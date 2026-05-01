@@ -78,7 +78,7 @@ export function ContactForm() {
                                     name="name"
                                     placeholder="Your full name"
                                     required
-                                    className="pl-9"
+                                    className="pl-9 py-6"
                                 />
                             </div>
                         </div>
@@ -92,7 +92,7 @@ export function ContactForm() {
                                     type="email"
                                     placeholder="you@example.com"
                                     required
-                                    className="pl-9"
+                                    className="pl-9 py-6"
                                 />
                             </div>
                         </div>
@@ -126,7 +126,7 @@ export function ContactForm() {
                                 placeholder="Describe your issue or question in detail…"
                                 required
                                 rows={5}
-                                className="pl-9 resize-none"
+                                className="pl-9 py-6 resize-none "
                             />
                         </div>
                     </div>

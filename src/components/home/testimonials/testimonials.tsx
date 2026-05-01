@@ -122,9 +122,7 @@ const Testimonials = () => {
     const reviews = (data?.data && data.data.length > 0) ? data.data : fallbackTestimonials;
 
     return (
-        <SectionWrapper
-            hasPadding={false}
-            topPadding={false}
+        <section className="max-w-7xl mx-auto px-4 xl:px-0 py-10 md:py-16 lg:py-20"
         >
             <SectionHeader
                 highlightWord='customers'
@@ -226,7 +224,7 @@ const Testimonials = () => {
                     <div className="swiper-pagination testimonials-pagination" />
                 </div>
             </div>
-        </SectionWrapper>
+        </section>
     );
 };
 

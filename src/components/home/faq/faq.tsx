@@ -108,6 +108,7 @@ const FaqSection = () => {
             >
                 <PrimaryButton
                     className='py-6'
+                    onClick={() => window.location.href = "/contact"}
                 >
                     See More FAQ&apos;s
                 </PrimaryButton>

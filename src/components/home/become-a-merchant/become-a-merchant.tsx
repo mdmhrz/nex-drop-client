@@ -7,7 +7,7 @@ import { PrimaryButton } from "@/components/shared/primary-button";
 
 export function BecomeAMerchant() {
     return (
-        <SectionWrapper>
+        <section className="max-w-7xl mx-auto px-4 xl:px-0 pt-16 md:pt-20 lg:pt-28">
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -26,7 +26,7 @@ export function BecomeAMerchant() {
                 </div>
 
                 {/* Main container */}
-                <div className="relative flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
+                <div className="relative flex flex-col-reverse lg:flex-row items-center gap-8 lg:gap-12">
                     {/* Left Content */}
                     <div className="flex-1 space-y-6 text-center lg:text-left">
                         <motion.h2
@@ -84,6 +84,6 @@ export function BecomeAMerchant() {
                     </motion.div>
                 </div>
             </motion.div>
-        </SectionWrapper>
+        </section>
     );
 }

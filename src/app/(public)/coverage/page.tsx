@@ -1,13 +1,13 @@
-import { SectionWrapper } from "@/components/home/section-wrapper";
+
 import CoverageMap from "@/components/coverage/coverage-map-dynamic";
 import { Card } from "@/components/ui/card";
 
 export default function CoveragePage() {
     return (
-        <SectionWrapper>
+        <section className="max-w-7xl mx-auto px-4 xl:px-0 py-10 md:py-20">
             <div className="space-y-8">
                 {/* Header Section */}
-                <div className="space-y-4 pt-10">
+                <div className="">
                     <h1 className="section-heading-text text-4xl md:text-5xl font-bold tracking-tight">
                         We are available in 64 districts
                     </h1>
@@ -25,6 +25,6 @@ export default function CoveragePage() {
                     <CoverageMap />
                 </Card>
             </div>
-        </SectionWrapper>
+        </section>
     );
 }

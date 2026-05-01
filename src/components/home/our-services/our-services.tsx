@@ -45,9 +45,8 @@ const services = [
 
 export function OurServices() {
     return (
-        <SectionWrapper hasPadding={false} topPadding={false}>
-
-            <div className="bg-[#03373D] rounded-lg p-6 md:p-10 lg:p-16">
+        <section className="bg-[#03373D] max-w-7xl mx-auto px-4 xl:px-0 rounded-lg">
+            <div className="p-16 md:p-20 ">
                 {/* Section Header */}
                 <SectionHeader
                     title="Our Services"
@@ -62,7 +61,7 @@ export function OurServices() {
                         return (
                             <Card
                                 key={service.id}
-                                className="group dark:border dark:border-border bg-card/50 backdrop-blur-sm p-4 text-center transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:bg-card sm:p-5 overflow-hidden cursor-pointer h-full flex flex-col"
+                                className="group border  dark:border-0  bg-card/50 backdrop-blur-sm p-4 text-center transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:bg-card sm:p-5 overflow-hidden cursor-pointer h-full flex flex-col"
                             >
                                 {/* Icon */}
                                 <div className="flex items-center justify-center mb-3">
@@ -72,7 +71,7 @@ export function OurServices() {
                                 </div>
 
                                 {/* Title */}
-                                <h3 className="text-center text-base font-semibold text-foreground sm:text-lg">
+                                <h3 className="text-center text-base font-semibold text-slate-900 dark:text-foreground sm:text-lg">
                                     {service.title}
                                 </h3>
 
@@ -80,7 +79,7 @@ export function OurServices() {
                                 <div className="my-2 h-0.5 w-8 bg-primary mx-auto" />
 
                                 {/* Description */}
-                                <p className="text-center text-sm leading-relaxed text-muted-foreground grow">
+                                <p className="text-center text-sm leading-relaxed text-slate-600 dark:text-muted-foreground grow">
                                     {service.description}
                                 </p>
 
@@ -91,6 +90,6 @@ export function OurServices() {
                     })}
                 </div>
             </div>
-        </SectionWrapper>
+        </section>
     );
 }

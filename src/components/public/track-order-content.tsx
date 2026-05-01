@@ -128,7 +128,7 @@ export function TrackOrderContent({ initialParcel, initialTrackingId = "" }: Tra
   const parcel = data?.data;
 
   return (
-    <div className="space-y-8 pt-10">
+    <div className="space-y-8">
       {/* Header Section */}
       <div className="space-y-2">
         <h1 className="section-heading-text text-4xl md:text-5xl font-bold tracking-tight">
@@ -210,7 +210,7 @@ export function TrackOrderContent({ initialParcel, initialTrackingId = "" }: Tra
           title="Parcel Not Found"
           description="We couldn't find a parcel with that tracking ID. Please check and try again."
           actions={[
-            { label: "Clear Search", href: "javascript:void(0)", variant: "outline" },
+            { label: "Back To Home", href: "/", variant: "outline" },
           ]}
         />
       )}

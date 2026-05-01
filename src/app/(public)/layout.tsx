@@ -12,7 +12,7 @@ export default function PublicLayout({
       <div className="relavtive z-50 py-16">
         <Navbar />
       </div>
-      <main className="px-6 lg:px-0">{children}</main>
+      <main className="">{children}</main>
       <Footer />
     </div>
   );
