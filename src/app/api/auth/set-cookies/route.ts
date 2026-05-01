@@ -13,6 +13,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = request.nextUrl;
     const accessToken = searchParams.get("accessToken");
     const refreshToken = searchParams.get("refreshToken");
+    const sessionToken = searchParams.get("sessionToken");
     const redirect = searchParams.get("redirect") || "/dashboard";
 
     if (!accessToken || !refreshToken) {
@@ -35,6 +36,8 @@ export async function GET(request: NextRequest) {
 
     response.cookies.set("accessToken", accessToken, { ...base, maxAge: 24 * 60 * 60 });       // 1 day
     response.cookies.set("refreshToken", refreshToken, { ...base, maxAge: 7 * 24 * 60 * 60 });   // 7 days
-
+    if (sessionToken) {
+        response.cookies.set("better-auth.session_token", sessionToken as string, { ...base, maxAge: 7 * 24 * 60 * 60 }); // 7 days
+    }
     return response;
 }
