@@ -1,27 +1,33 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Share2, Mail, Globe, PlayCircle, ArrowRight, Package } from 'lucide-react';
+import { toast } from 'sonner';
 import { Logo } from '@/components/shared/logo';
+import { authService } from '@/services/auth.service';
+
+const MotionLink = motion(Link);
 
 const footerSections = {
-    product: {
-        title: 'Product',
-        links: ['Features', 'Pricing', 'Security', 'Enterprise', 'Roadmap'],
-    },
-    resources: {
-        title: 'Resources',
-        links: ['Documentation', 'API Reference', 'Blog', 'Status', 'Support'],
+    features: {
+        title: 'Features',
+        links: [
+            { label: 'Track Order', href: '/track-order' },
+            { label: 'Coverage', href: '/coverage' },
+            { label: 'Payment', href: '/payment' },
+        ],
     },
     company: {
         title: 'Company',
-        links: ['About', 'Contact', 'Careers', 'Press', 'Partners'],
-    },
-    legal: {
-        title: 'Legal',
-        links: ['Privacy', 'Terms', 'Cookies', 'Compliance'],
+        links: [
+            { label: 'About', href: '/about' },
+            { label: 'Contact', href: '/contact' },
+            { label: 'Be a Rider', href: '/be-a-rider' },
+        ],
     },
 };
 
@@ -64,6 +70,9 @@ const paymentMethods = [
 ];
 
 const Footer = () => {
+    const router = useRouter();
+    const [isLoading, setIsLoading] = useState(false);
+
     const containerVariants = {
         hidden: { opacity: 0 },
         visible: {
@@ -91,6 +100,25 @@ const Footer = () => {
             scale: 1,
             transition: { duration: 0.5, delay: 0.4 },
         },
+    };
+
+    const handleSendParcelClick = async () => {
+        try {
+            setIsLoading(true);
+            // Check if user is authenticated
+            await authService.getMe();
+            // If successful, redirect to create parcel
+            router.push('/dashboard/create-parcel');
+        } catch (error) {
+            // If error, user is not authenticated
+            toast.error('Please login first', {
+                description: 'You need to be logged in to send a parcel.',
+            });
+            // Optionally redirect to login
+            router.push('/login?redirect=/dashboard/create-parcel');
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -149,19 +177,20 @@ const Footer = () => {
                                         We Support
                                     </h3>
                                     <div className="flex gap-4">
-                                        {paymentMethods.map((method) => (
+                                        {paymentMethods.map((method, i) => (
                                             <motion.div
                                                 key={method.name}
                                                 whileHover={{ scale: 1.1 }}
-                                                className="relative h-10 w-20 rounded bg-background/10 dark:bg-foreground/10 border border-background/20 dark:border-foreground/20 overflow-hidden flex items-center justify-center"
+                                                className={`relative h-10 overflow-hidden flex items-center justify-center ${method.name === 'Stripe' ? 'w-20' : 'w-32'
+                                                    }`}
                                                 title={method.name}
                                             >
                                                 <Image
                                                     src={method.path}
                                                     alt={method.name}
-                                                    width={40}
-                                                    height={24}
-                                                    className="object-contain h-full w-full p-1"
+                                                    width={method.name === 'Stripe' ? 80 : 160}
+                                                    height={method.name === 'Stripe' ? 24 : 32}
+                                                    className="object-contain h-full w-full"
                                                 />
                                             </motion.div>
                                         ))}
@@ -178,22 +207,23 @@ const Footer = () => {
                             <p className="text-background/75 dark:text-foreground/75 mb-8 max-w-lg">
                                 Get your package delivered fast and securely. Track in real-time and enjoy peace of mind.
                             </p>
-                            <motion.a
-                                href="/send-parcel"
-                                whileHover={{ scale: 1.05, gap: 8 }}
+                            <motion.button
+                                onClick={handleSendParcelClick}
+                                disabled={isLoading}
+                                whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
-                                className="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-8 py-4 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl"
+                                className="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 disabled:bg-primary/50 disabled:cursor-not-allowed text-primary-foreground font-semibold px-8 py-4 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl"
                             >
                                 <Package className="w-5 h-5" />
-                                Send Your Parcel Now
+                                {isLoading ? 'Redirecting...' : 'Send Your Parcel Now'}
                                 <ArrowRight className="w-5 h-5" />
-                            </motion.a>
+                            </motion.button>
                         </motion.div>
                     </motion.div>
 
 
                     {/* Links Grid */}
-                    <motion.div variants={itemVariants} className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16 py-8 border-y border-background/10 dark:border-foreground/10">
+                    <motion.div variants={itemVariants} className="grid grid-cols-2 md:grid-cols-3 gap-8 mb-16 py-8 border-y border-background/10 dark:border-foreground/10">
                         {Object.entries(footerSections).map(([key, section]) => (
                             <div key={key}>
                                 <h3 className="font-bold text-sm uppercase tracking-widest text-background dark:text-foreground mb-6">
@@ -201,14 +231,14 @@ const Footer = () => {
                                 </h3>
                                 <ul className="space-y-3">
                                     {section.links.map((link) => (
-                                        <li key={link}>
-                                            <motion.a
-                                                href="#"
+                                        <li key={link.href}>
+                                            <MotionLink
+                                                href={link.href}
                                                 whileHover={{ x: 4 }}
                                                 className="text-sm text-background/70 dark:text-foreground/70 hover:text-background dark:hover:text-foreground transition-colors duration-300"
                                             >
-                                                {link}
-                                            </motion.a>
+                                                {link.label}
+                                            </MotionLink>
                                         </li>
                                     ))}
                                 </ul>
@@ -225,15 +255,15 @@ const Footer = () => {
                             © {new Date().getFullYear()} NexDrop. All rights reserved
                         </div>
                         <div className="flex gap-6">
-                            <a href="#" className="hover:text-background dark:hover:text-foreground transition-colors">
+                            <Link href="/privacy-policy" className="hover:text-background dark:hover:text-foreground transition-colors">
                                 Privacy Policy
-                            </a>
-                            <a href="#" className="hover:text-background dark:hover:text-foreground transition-colors">
+                            </Link>
+                            <Link href="/terms-of-service" className="hover:text-background dark:hover:text-foreground transition-colors">
                                 Terms of Service
-                            </a>
-                            <a href="#" className="hover:text-background dark:hover:text-foreground transition-colors">
+                            </Link>
+                            <Link href="/cookie-policy" className="hover:text-background dark:hover:text-foreground transition-colors">
                                 Cookie Policy
-                            </a>
+                            </Link>
                         </div>
                     </motion.div>
                 </div>

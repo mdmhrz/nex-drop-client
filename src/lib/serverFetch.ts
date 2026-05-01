@@ -4,32 +4,41 @@ import { env } from "@/lib/env";
 
 type FetchOptions = RequestInit & {
     auth?: boolean;
+    timeout?: number; // timeout in ms, defaults to 30s
 };
 
 export async function serverFetch<T>(
     endpoint: string,
     options: FetchOptions = {}
 ): Promise<T> {
-    const { auth = true, headers, ...rest } = options;
+    const { auth = true, timeout = 30000, headers, ...rest } = options;
     const cookieStore = await cookies();
     const cookieHeader = cookieStore.toString();
 
-    const response = await fetch(
-        `${env.BACKEND_BASE_URL}/api/${env.API_VERSION}${endpoint}`,
-        {
-            cache: "no-store",
-            ...rest,
-            headers: {
-                "Content-Type": "application/json",
-                ...(auth && { Cookie: cookieHeader }),
-                ...headers,
-            },
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+    try {
+        const response = await fetch(
+            `${env.BACKEND_BASE_URL}/api/${env.API_VERSION}${endpoint}`,
+            {
+                cache: "no-store",
+                ...rest,
+                signal: controller.signal,
+                headers: {
+                    "Content-Type": "application/json",
+                    ...(auth && { Cookie: cookieHeader }),
+                    ...headers,
+                },
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(`Request failed: ${response.status}`);
         }
-    );
 
-    if (!response.ok) {
-        throw new Error(`Request failed: ${response.status}`);
+        return response.json();
+    } finally {
+        clearTimeout(timeoutId);
     }
-
-    return response.json();
 }

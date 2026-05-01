@@ -15,6 +15,7 @@ export const metadata = {
 }
 
 export default async function HomePage() {
+
   const queryClient = new QueryClient();
 
   await queryClient.prefetchQuery({

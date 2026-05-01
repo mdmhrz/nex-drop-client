@@ -56,10 +56,10 @@ export function ChartArea({
                         <Area
                             dataKey={dataKey}
                             type="natural"
-                            fill="var(--color-chart-2)"
-                            fillOpacity={0.8}
-                            stroke="var(--color-chart-1)"
-                            className="mb-4"
+                            fill={config[dataKey]?.color || "var(--color-chart-1)"}
+                            fillOpacity={0.4}
+                            stroke={config[dataKey]?.color || "var(--color-chart-2)"}
+                            strokeWidth={2}
                         />
                     </AreaChart>
                 </ChartContainer>

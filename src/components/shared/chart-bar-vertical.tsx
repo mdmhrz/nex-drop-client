@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart";
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Legend } from "recharts";
 import { cn } from "@/lib/utils";
 
 export interface ChartBarVerticalProps {
@@ -10,9 +10,10 @@ export interface ChartBarVerticalProps {
   description?: string;
   data: Array<Record<string, string | number>>;
   xDataKey: string;
-  yDataKey?: string;
+  dataKeys?: string[]; // Explicit data keys to render as bars
   config: ChartConfig;
   className?: string;
+  showLegend?: boolean;
 }
 
 export function ChartBarVertical({
@@ -20,10 +21,14 @@ export function ChartBarVertical({
   description,
   data,
   xDataKey,
-  yDataKey,
+  dataKeys,
   config,
   className,
+  showLegend = true,
 }: ChartBarVerticalProps) {
+  // Get data keys from config, excluding the xDataKey
+  const barsToRender = dataKeys || Object.keys(config).filter(key => key !== xDataKey);
+
   return (
     <Card className={cn("h-full", className)}>
       {title && (
@@ -42,20 +47,21 @@ export function ChartBarVertical({
               tickMargin={10}
               axisLine={false}
             />
-            {yDataKey && (
-              <YAxis
-                tickLine={false}
-                axisLine={false}
-                tickMargin={10}
-              />
-            )}
+            <YAxis
+              tickLine={false}
+              axisLine={false}
+              tickMargin={10}
+            />
             <ChartTooltip content={<ChartTooltipContent />} />
-            {Object.keys(config).map((key) => (
+            {showLegend && <Legend />}
+            {barsToRender.map((key) => (
               <Bar
                 key={key}
+                stackId={undefined}
                 dataKey={key}
-                fill={config[key].color || `var(--color-${key})`}
+                fill={config[key]?.color || `var(--color-${key})`}
                 radius={[4, 4, 0, 0]}
+                stroke="none"
               />
             ))}
           </BarChart>

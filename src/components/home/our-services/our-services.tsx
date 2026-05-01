@@ -45,8 +45,8 @@ const services = [
 
 export function OurServices() {
     return (
-        <section className="bg-[#03373D] max-w-7xl mx-auto px-4 xl:px-0 rounded-lg">
-            <div className="p-16 md:p-20 ">
+        <section className="px-4 xl:px-0">
+            <div className="bg-[#03373D] max-w-7xl mx-auto  rounded-lg p-6 md:p-16 lg:p-20 ">
                 {/* Section Header */}
                 <SectionHeader
                     title="Our Services"
