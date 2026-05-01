@@ -50,7 +50,7 @@ export default function PaymentResult({
     }
 
     return (
-        <div className="min-h-[100dvh] bg-background flex items-center justify-center">
+        <div className="min-h-[100dvh] pb-[env(safe-area-inset-bottom)]  bg-background flex items-center justify-center">
             <div className="container max-w-2xl mx-auto py-16">
                 <Card className="shadow-sm">
 

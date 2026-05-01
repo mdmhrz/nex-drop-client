@@ -20,7 +20,7 @@ export function AuthLayout({
   backButtonHref = "/",
 }: AuthLayoutProps) {
   return (
-    <div className="min-h-[100dvh] flex">
+    <div className="min-h-[100dvh] pb-[env(safe-area-inset-bottom)]  flex">
       {/* Left Side - Branding Panel */}
       <div className="hidden lg:block lg:w-1/2 bg-[#03373D]">
         <AuthSidePanel title={leftSideTitle} description={leftSideDescription} />

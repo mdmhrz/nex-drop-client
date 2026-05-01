@@ -17,7 +17,7 @@ export default function DashboardError({ error, reset }: ErrorProps) {
     }, [error]);
 
     return (
-        <div className="min-h-[100dvh] flex flex-col items-center justify-center bg-background px-6 py-16">
+        <div className="min-h-[100dvh] pb-[env(safe-area-inset-bottom)]  flex flex-col items-center justify-center bg-background px-6 py-16">
             <div className="mb-12">
                 <Logo />
             </div>
