@@ -5,7 +5,7 @@ import { Logo } from "@/components/shared/logo";
 
 export default function NotFound() {
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-background px-6 py-16">
+        <div className="min-h-[100dvh] flex flex-col items-center justify-center bg-background px-6 py-16">
             <div className="mb-12">
                 <Logo />
             </div>

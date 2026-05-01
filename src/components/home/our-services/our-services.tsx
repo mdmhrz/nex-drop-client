@@ -2,7 +2,7 @@
 import { Truck, Globe, Warehouse, DollarSign, Building2, RotateCcw } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { SectionHeader } from "@/components/home/section-header";
-import { SectionWrapper } from "@/components/home/section-wrapper";
+
 
 const services = [
     {

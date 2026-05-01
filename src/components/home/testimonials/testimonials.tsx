@@ -5,7 +5,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination } from 'swiper/modules';
 import { motion } from 'framer-motion';
 import { Star, Package } from 'lucide-react';
-import { SectionWrapper } from '@/components/home/section-wrapper';
+
 import { SectionHeader } from '@/components/home/section-header';
 import { UserAvatar } from '@/components/shared/user-avatar';
 import { useRecentReviews } from '@/hooks/use-ratings';

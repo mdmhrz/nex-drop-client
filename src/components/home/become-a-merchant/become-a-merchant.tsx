@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { SectionWrapper } from "@/components/home/section-wrapper";
 import { PrimaryButton } from "@/components/shared/primary-button";
 
 export function BecomeAMerchant() {

@@ -8,7 +8,7 @@ export default function PublicLayout({
   children: ReactNode;
 }) {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-[100dvh]">
       <div className="relavtive z-50 py-16">
         <Navbar />
       </div>

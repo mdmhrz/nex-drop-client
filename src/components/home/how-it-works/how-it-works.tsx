@@ -3,7 +3,6 @@
 import { Package, MapPin, Truck, CheckCircle } from "lucide-react";
 import { motion } from "framer-motion";
 import { SectionHeader } from "@/components/home/section-header";
-import { SectionWrapper } from "@/components/home/section-wrapper";
 import { Card } from "@/components/ui/card";
 
 const steps = [
