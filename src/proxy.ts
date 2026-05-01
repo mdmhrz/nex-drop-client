@@ -7,123 +7,161 @@ import {
     UserRole,
 } from "./lib/authUtils";
 
+// Refresh the access token proactively if it expires within this window
+const REFRESH_THRESHOLD_SECONDS = 5 * 60; // 5 minutes
+
+// Cookie lifetimes (seconds)
+const ACCESS_TOKEN_MAX_AGE = 24 * 60 * 60;     // 1 day
+const REFRESH_TOKEN_MAX_AGE = 7 * 24 * 60 * 60; // 7 days
+
+interface FreshTokens {
+    accessToken: string;
+    refreshToken: string;
+    sessionToken: string;
+}
+
+async function tryRefreshTokens(request: NextRequest): Promise<FreshTokens | null> {
+    const refreshToken = request.cookies.get("refreshToken")?.value;
+    const sessionToken = request.cookies.get("better-auth.session_token")?.value;
+
+    if (!refreshToken || !sessionToken) return null;
+
+    try {
+        const res = await fetch(
+            `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/api/v1/auth/refresh-token`,
+            {
+                method: "POST",
+                headers: {
+                    Cookie: `refreshToken=${refreshToken}; better-auth.session_token=${sessionToken}`,
+                },
+            }
+        );
+        if (!res.ok) return null;
+        const body = await res.json();
+        return body.data ?? null;
+    } catch {
+        return null;
+    }
+}
+
+function applyCookies(response: NextResponse, tokens: FreshTokens): NextResponse {
+    const isProduction = process.env.NODE_ENV === "production";
+    const base = {
+        httpOnly: true,
+        secure: isProduction,
+        sameSite: (isProduction ? "none" : "lax") as "none" | "lax",
+        path: "/",
+    };
+    response.cookies.set("accessToken", tokens.accessToken, { ...base, maxAge: ACCESS_TOKEN_MAX_AGE });
+    response.cookies.set("refreshToken", tokens.refreshToken, { ...base, maxAge: REFRESH_TOKEN_MAX_AGE });
+    response.cookies.set("better-auth.session_token", tokens.sessionToken, { ...base, maxAge: REFRESH_TOKEN_MAX_AGE });
+    return response;
+}
+
 export async function proxy(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
-    const accessToken = request.cookies.get("accessToken")?.value;
+    let accessToken = request.cookies.get("accessToken")?.value;
+    let decoded = accessToken ? jwtUtils.decodedToken(accessToken) : null;
+    let freshTokens: FreshTokens | null = null;
 
-    // Decode token without verification in middleware
-    // Actual verification happens server-side
-    const decoded = accessToken ? jwtUtils.decodedToken(accessToken) : null;
+    // ── Proactive refresh ──────────────────────────────────────────────────
+    // Refresh if token is missing OR expires within the threshold window
+    const now = Math.floor(Date.now() / 1000);
+    const exp = decoded?.exp ?? 0;
+    if (!decoded || exp - now < REFRESH_THRESHOLD_SECONDS) {
+        freshTokens = await tryRefreshTokens(request);
+        if (freshTokens) {
+            accessToken = freshTokens.accessToken;
+            decoded = jwtUtils.decodedToken(accessToken);
+        }
+    }
+    // ──────────────────────────────────────────────────────────────────────
+
     const isValidAccessToken = !!decoded;
-
     const rawRole = decoded?.role as UserRole | undefined;
     const userRole: UserRole | null = rawRole || null;
-
     const emailVerified = decoded?.emailVerified ?? false;
 
     const routeOwner = getRouteOwner(pathname);
     const authRoute = isAuthRoute(pathname);
 
-    console.log("=== Proxy Debug ===");
-    console.log(`Pathname: ${pathname}`);
-    console.log(`User Role: ${userRole}`);
-    console.log(`Route Owner: ${routeOwner}`);
-    console.log(`Is Auth Route: ${authRoute}`);
-    console.log(`Is Valid Token: ${isValidAccessToken}`);
+    // Attach refreshed cookies to any response before returning
+    const fin = (res: NextResponse) => freshTokens ? applyCookies(res, freshTokens) : res;
 
-    // Protect payment pages: require a valid accessToken and a session_id query param
+    // ── Payment pages ──────────────────────────────────────────────────────
     if (pathname.startsWith("/payment")) {
-        // Allow showing the fail page to give users a reason
         if (pathname === "/payment/fail") {
-            return NextResponse.next();
+            return fin(NextResponse.next());
         }
-
         const sessionId = request.nextUrl.searchParams.get("session_id");
-
-        // If user is not authenticated, send them to login
         if (!isValidAccessToken || !userRole) {
             const loginUrl = new URL("/login", request.url);
             loginUrl.searchParams.set("redirect", pathname);
-            return NextResponse.redirect(loginUrl);
+            return fin(NextResponse.redirect(loginUrl));
         }
-
-        // If session_id missing, show an unauthorized/fail page
         if (!sessionId) {
             const failUrl = new URL("/payment/fail", request.url);
             failUrl.searchParams.set("error", "Missing session_id");
-            return NextResponse.redirect(failUrl);
+            return fin(NextResponse.redirect(failUrl));
         }
-
-        return NextResponse.next();
+        return fin(NextResponse.next());
     }
 
-    // Be a Rider: public route but blocked for riders
+    // ── Be a Rider ─────────────────────────────────────────────────────────
     if (pathname === "/be-a-rider" || pathname.startsWith("/be-a-rider/")) {
         if (isValidAccessToken && userRole === "RIDER") {
-            return NextResponse.redirect(
-                new URL(getDefaultDashboardRoute(userRole), request.url)
-            );
+            return fin(NextResponse.redirect(new URL(getDefaultDashboardRoute(userRole), request.url)));
         }
-        return NextResponse.next();
+        return fin(NextResponse.next());
     }
 
-    // Verify Email Page
+    // ── Verify Email ───────────────────────────────────────────────────────
     if (pathname === "/verify-email") {
         if (!isValidAccessToken) {
-            return NextResponse.next();
+            return fin(NextResponse.next());
         }
         if (emailVerified) {
-            return NextResponse.redirect(new URL(getDefaultDashboardRoute(userRole!), request.url));
+            return fin(NextResponse.redirect(new URL(getDefaultDashboardRoute(userRole!), request.url)));
         }
-        return NextResponse.next();
+        return fin(NextResponse.next());
     }
 
-    // Block logged-in users from auth pages
+    // ── Block logged-in users from auth pages ──────────────────────────────
     if (isValidAccessToken && authRoute) {
-        return NextResponse.redirect(
-            new URL(getDefaultDashboardRoute(userRole as UserRole), request.url)
-        );
+        return fin(NextResponse.redirect(new URL(getDefaultDashboardRoute(userRole as UserRole), request.url)));
     }
 
-    // Public routes
+    // ── Public routes ──────────────────────────────────────────────────────
     if (routeOwner === null) {
-        return NextResponse.next();
+        return fin(NextResponse.next());
     }
 
-    // Protect all other routes
+    // ── Require authentication ─────────────────────────────────────────────
     if (!isValidAccessToken || !userRole) {
         const loginUrl = new URL("/login", request.url);
         loginUrl.searchParams.set("redirect", pathname);
-        return NextResponse.redirect(loginUrl);
+        return fin(NextResponse.redirect(loginUrl));
     }
 
-    // Common routes allowed for all logged-in users
+    // ── Common routes (all authenticated roles) ────────────────────────────
     if (routeOwner === "COMMON") {
-        return NextResponse.next();
+        return fin(NextResponse.next());
     }
 
-    // Role-based access control
+    // ── Role-based access control ──────────────────────────────────────────
     if (routeOwner) {
-        // If the required role matches user's role, allow
         if (routeOwner === userRole) {
-            return NextResponse.next();
+            return fin(NextResponse.next());
         }
-
-        // Only SUPER_ADMIN can access ADMIN routes
+        // SUPER_ADMIN can access ADMIN routes
         if (routeOwner === "ADMIN" && userRole === "SUPER_ADMIN") {
-            return NextResponse.next();
+            return fin(NextResponse.next());
         }
-
-        // No other role escalation allowed
-        // Redirect to user's own dashboard
-        console.log(`Access denied: ${userRole} tried to access ${routeOwner} route`);
-        return NextResponse.redirect(
-            new URL(getDefaultDashboardRoute(userRole), request.url)
-        );
+        return fin(NextResponse.redirect(new URL(getDefaultDashboardRoute(userRole), request.url)));
     }
 
-    return NextResponse.next();
+    return fin(NextResponse.next());
 }
 
 export const config = {

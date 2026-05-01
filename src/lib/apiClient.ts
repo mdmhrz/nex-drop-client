@@ -6,6 +6,23 @@ const API_BASE_URL = `${env.NEXT_PUBLIC_FRONTEND_BASE_URL}/api/${env.NEXT_PUBLIC
 
 /* Axios client with interceptors and typed helper methods for API requests */
 
+// ── Reactive refresh state ─────────────────────────────────────────────────
+type QueueEntry = { resolve: () => void; reject: (err: unknown) => void };
+let isRefreshing = false;
+const failedQueue: QueueEntry[] = [];
+
+function processQueue(error: unknown): void {
+  failedQueue.splice(0).forEach((entry) => {
+    if (error) entry.reject(error);
+    else entry.resolve();
+  });
+}
+// ──────────────────────────────────────────────────────────────────────────
+
+interface RetryConfig extends InternalAxiosRequestConfig {
+  _retry?: boolean;
+}
+
 const apiClient: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,
   timeout: 120000,
@@ -26,13 +43,49 @@ apiClient.interceptors.request.use(
 
 apiClient.interceptors.response.use(
   (response) => response,
-  (error: AxiosError<unknown>) => {
+  async (error: AxiosError<unknown>) => {
     const status = error.response?.status;
     const isTimeout = error.code === 'ECONNABORTED' || error.message.includes('timeout');
+    const originalConfig = error.config as RetryConfig | undefined;
 
-    if (status === 401 && typeof window !== "undefined") {
-      console.warn("Unauthorized request");
+    // ── Reactive token refresh on 401 ──────────────────────────────────────
+    if (
+      status === 401 &&
+      typeof window !== "undefined" &&
+      originalConfig &&
+      !originalConfig._retry &&
+      !originalConfig.url?.includes("/auth/refresh-token")
+    ) {
+      originalConfig._retry = true;
+
+      if (isRefreshing) {
+        // Another refresh is in flight — queue this request
+        return new Promise<unknown>((resolve, reject) => {
+          failedQueue.push({
+            resolve: () => resolve(apiClient(originalConfig)),
+            reject,
+          });
+        });
+      }
+
+      isRefreshing = true;
+      try {
+        await axios.post(
+          `${env.NEXT_PUBLIC_FRONTEND_BASE_URL}/api/${env.NEXT_PUBLIC_API_VERSION}/auth/refresh-token`,
+          {},
+          { withCredentials: true }
+        );
+        processQueue(null);
+        return apiClient(originalConfig);
+      } catch (refreshError) {
+        processQueue(refreshError);
+        window.location.href = "/login";
+        return Promise.reject(refreshError);
+      } finally {
+        isRefreshing = false;
+      }
     }
+    // ──────────────────────────────────────────────────────────────────────
 
     // Log timeout errors for debugging
     if (isTimeout) {

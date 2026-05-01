@@ -89,6 +89,7 @@ export function BangladeshAddressSelector({
     [districtValue]
   );
 
+  const hasUpazila = upazilas.length > 0;
   const hasThana = thanas.length > 0;
 
   const handleDistrictChange = (value: string) => {
@@ -111,7 +112,7 @@ export function BangladeshAddressSelector({
         required={addressTextRequired}
       />
 
-      {/* District and Upazila */}
+      {/* District + Upazila + Thana */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {/* District */}
         <div className="space-y-1.5">
@@ -128,39 +129,55 @@ export function BangladeshAddressSelector({
           {districtError && <p className="text-xs text-destructive">{districtError}</p>}
         </div>
 
-        {/* Upazila or Thana */}
-        <div className="space-y-1.5">
-          <Label className={cn("text-sm font-medium", (hasThana ? thanaError : upazilaError) && "text-destructive")}>
-            {hasThana ? thanaLabel : upazilaLabel} {(hasThana ? thanaRequired : upazilaRequired) && <span className="text-destructive">*</span>}
-          </Label>
-          <Select
-            value={hasThana ? (thanaValue ?? "") : (upazilaValue ?? "")}
-            onValueChange={hasThana ? onThanaChange : onUpazilaChange}
-            disabled={!districtValue}
-          >
-            <SelectTrigger className={cn("w-full", (hasThana ? thanaError : upazilaError) && "border-destructive")}>
-              <SelectValue
-                placeholder={districtValue ? (hasThana ? thanaPlaceholder : upazilaPlaceholder) : "Select district first"}
-              />
-            </SelectTrigger>
-            <SelectContent>
-              {hasThana ? (
-                thanas.map((t) => (
-                  <SelectItem key={t} value={t}>
-                    {t}
-                  </SelectItem>
-                ))
-              ) : (
-                upazilas.map((u) => (
-                  <SelectItem key={u} value={u}>
-                    {u}
-                  </SelectItem>
-                ))
-              )}
-            </SelectContent>
-          </Select>
-          {hasThana ? (thanaError && <p className="text-xs text-destructive">{thanaError}</p>) : (upazilaError && <p className="text-xs text-destructive">{upazilaError}</p>)}
-        </div>
+        {/* Upazila — shown when upazilas exist */}
+        {hasUpazila && (
+          <div className="space-y-1.5">
+            <Label className={cn("text-sm font-medium", upazilaError && "text-destructive")}>
+              {upazilaLabel} {!hasThana && upazilaRequired && <span className="text-destructive">*</span>}
+              {hasThana && <span className="text-xs font-normal text-muted-foreground ml-1">(rural areas)</span>}
+            </Label>
+            <Select
+              value={upazilaValue ?? ""}
+              onValueChange={onUpazilaChange}
+              disabled={!districtValue}
+            >
+              <SelectTrigger className={cn("w-full", upazilaError && "border-destructive")}>
+                <SelectValue placeholder={districtValue ? upazilaPlaceholder : "Select district first"} />
+              </SelectTrigger>
+              <SelectContent>
+                {upazilas.map((u) => (
+                  <SelectItem key={u} value={u}>{u}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {upazilaError && <p className="text-xs text-destructive">{upazilaError}</p>}
+          </div>
+        )}
+
+        {/* Thana — shown when thanas exist */}
+        {hasThana && (
+          <div className="space-y-1.5">
+            <Label className={cn("text-sm font-medium", thanaError && "text-destructive")}>
+              {thanaLabel} {!hasUpazila && thanaRequired && <span className="text-destructive">*</span>}
+              {hasUpazila && <span className="text-xs font-normal text-muted-foreground ml-1">(city areas)</span>}
+            </Label>
+            <Select
+              value={thanaValue ?? ""}
+              onValueChange={onThanaChange}
+              disabled={!districtValue}
+            >
+              <SelectTrigger className={cn("w-full", thanaError && "border-destructive")}>
+                <SelectValue placeholder={districtValue ? thanaPlaceholder : "Select district first"} />
+              </SelectTrigger>
+              <SelectContent>
+                {thanas.map((t) => (
+                  <SelectItem key={t} value={t}>{t}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {thanaError && <p className="text-xs text-destructive">{thanaError}</p>}
+          </div>
+        )}
       </div>
     </div>
   );
