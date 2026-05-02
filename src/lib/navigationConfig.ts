@@ -5,7 +5,7 @@ import {
     MapPin,
     CreditCard,
     User,
-    Settings,
+
     Truck,
     BarChart3,
     Users,
@@ -92,14 +92,14 @@ const adminNavigationSections: NavigationSection[] = [
         ],
     },
     {
-        title: "System",
+        title: "Profile",
         items: [
             {
-                name: "Settings",
-                href: "/admin-dashboard/settings",
-                icon: Settings,
+                name: "Profile",
+                href: "/admin-dashboard/profile",
+                icon: User,
                 roles: [UserRole.ADMIN, UserRole.SUPER_ADMIN],
-                description: "System settings",
+                description: "Admin Prfile",
             },
         ],
     },

@@ -6,6 +6,8 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 interface UserAvatarProps {
     name: string;
     profilePhoto?: string;
+    email?: string; // Optional, can be used in tooltip or fallback
+    showDetails?: boolean; // Whether to show the name and email next to the avatar
 }
 
 const avatarColors = [
@@ -41,25 +43,33 @@ function getInitials(name: string): string {
         .slice(0, 2);
 }
 
-export function UserAvatar({ name, profilePhoto }: UserAvatarProps) {
+export function UserAvatar({ name, profilePhoto, email, showDetails = false }: UserAvatarProps) {
     const initials = getInitials(name);
     const colorClass = getAvatarColor(name);
 
     return (
         <TooltipProvider>
-            <Tooltip>
-                <TooltipTrigger asChild>
-                    <Avatar className="h-8 w-8">
-                        <AvatarImage src={profilePhoto} alt={name} className="object-cover" />
-                        <AvatarFallback className={`${colorClass} text-xs font-semibold`}>
-                            {initials}
-                        </AvatarFallback>
-                    </Avatar>
-                </TooltipTrigger>
-                <TooltipContent side="bottom" align="center">
-                    <p className="font-medium">{name}</p>
-                </TooltipContent>
-            </Tooltip>
+            <div className="flex items-center">
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <Avatar className="h-8 w-8">
+                            <AvatarImage src={profilePhoto} alt={name} className="object-cover" />
+                            <AvatarFallback className={`${colorClass} text-xs font-semibold`}>
+                                {initials}
+                            </AvatarFallback>
+                        </Avatar>
+                    </TooltipTrigger>
+                    {showDetails && (
+                        <div className="ml-2">
+                            <p className="font-medium">{name}</p>
+                            {email && <p className="text-xs text-muted-foreground">{email}</p>}
+                        </div>
+                    )}
+                    <TooltipContent side="bottom" align="center">
+                        <p className="font-medium">{name}</p>
+                    </TooltipContent>
+                </Tooltip>
+            </div>
         </TooltipProvider>
     );
 }

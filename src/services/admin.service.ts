@@ -20,6 +20,10 @@ import type {
   GetAdminCashoutsParams,
   UpdateCashoutStatusParams,
   UpdateCashoutStatusResponse,
+  RiderApplicationsResponse,
+  GetRiderApplicationsParams,
+  UpdateRiderAccountStatusParams,
+  UpdateRiderAccountStatusResponse,
 } from "./admin.server";
 
 // Re-export types from admin.server.ts for type consistency
@@ -71,6 +75,14 @@ export type {
   GetAdminCashoutsParams,
   UpdateCashoutStatusParams,
   UpdateCashoutStatusResponse,
+  RiderAccountStatus,
+  RiderApplicationUser,
+  RiderApplication,
+  RiderApplicationsMeta,
+  RiderApplicationsResponse,
+  GetRiderApplicationsParams,
+  UpdateRiderAccountStatusParams,
+  UpdateRiderAccountStatusResponse,
 } from "./admin.server";
 
 // ==================== ANALYTICS ====================
@@ -128,3 +140,14 @@ export async function getAllCashoutsClient(params: GetAdminCashoutsParams = {}):
 export async function updateCashoutStatusClient(id: string, params: UpdateCashoutStatusParams): Promise<UpdateCashoutStatusResponse> {
   return api.patch<UpdateCashoutStatusResponse>(`/rider/cashouts/${id}`, params);
 }
+
+// ==================== RIDER APPLICATIONS ====================
+
+export async function getAllRiderApplicationsClient(params: GetRiderApplicationsParams = {}): Promise<RiderApplicationsResponse> {
+  return api.get<RiderApplicationsResponse>("/rider/applications", { params });
+}
+
+export async function updateRiderAccountStatusClient(riderId: string, params: UpdateRiderAccountStatusParams): Promise<UpdateRiderAccountStatusResponse> {
+  return api.patch<UpdateRiderAccountStatusResponse>(`/rider/applications/${riderId}/account-status`, params);
+}
+

@@ -44,6 +44,10 @@ export interface DataTableProps<TData> {
     emptyMessage?: string;
     /** Show the checkbox column for row selection. Defaults to true. */
     showCheckbox?: boolean;
+    /** Enable drag-and-drop column reordering. Defaults to true. */
+    enableDragDrop?: boolean;
+    /** Enable column resizing via drag handles. Defaults to false. */
+    enableColumnResizing?: boolean;
 
     // Optional feature props – omit any you don't need
     actions?: DataTableActionHandlers<TData>;

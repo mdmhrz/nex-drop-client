@@ -65,6 +65,8 @@ export function DataTable<TData extends RowData>({
     isLoading = false,
     emptyMessage,
     showCheckbox = true,
+    enableDragDrop = true,
+    enableColumnResizing = false,
     actions,
     sorting: sortingProp,
     pagination: paginationProp,
@@ -82,8 +84,10 @@ export function DataTable<TData extends RowData>({
         const base: string[] = [];
         if (showCheckbox) base.push("select");
         userColumns.forEach((c) => {
-            const id = (c as { id?: string; accessorKey?: string }).id ?? (c as { accessorKey?: string }).accessorKey;
-            if (id) base.push(String(id));
+            const col = c as { id?: string; accessorKey?: string };
+            // accessorKey dots are replaced with underscores by TanStack Table internally
+            const raw = col.id ?? col.accessorKey;
+            if (raw) base.push(String(raw).replace(/\./g, "_"));
         });
         if (actions) base.push("_actions");
         return base;
@@ -94,7 +98,7 @@ export function DataTable<TData extends RowData>({
         id: "select",
         size: 40,
         enableSorting: false,
-        enableResizing: false,
+        enableResizing: false, // never resizable
         header: ({ table }) => (
             <Checkbox
                 checked={
@@ -119,7 +123,7 @@ export function DataTable<TData extends RowData>({
         id: "_actions",
         size: 56,
         enableSorting: false,
-        enableResizing: false,
+        enableResizing: false, // never resizable
         header: () => <span className="sr-only">Actions</span>,
         cell: ({ row }) => (
             <div className="flex justify-center">
@@ -182,7 +186,8 @@ export function DataTable<TData extends RowData>({
     const table = useReactTable<TData>({
         data,
         columns: allColumns,
-        columnResizeMode: "onChange",
+        ...(enableColumnResizing ? { columnResizeMode: "onChange" } : {}),
+        enableColumnResizing,
         state: {
             sorting: sortingProp ? sortingProp.state : internalSorting,
             columnFilters,
@@ -232,8 +237,9 @@ export function DataTable<TData extends RowData>({
         enableRowSelection: showCheckbox,
     });
 
-    // Resolve ids for DnD context – only draggable user-defined columns (not select/actions)
-    const draggableIds = columnOrder.filter((id) => id !== "select" && id !== "_actions");
+    // Resolve ids for DnD context – only draggable user-defined columns (not select/actions/_actions)
+    const fixedColumnIds = new Set(["select", "actions", "_actions"]);
+    const draggableIds = columnOrder.filter((id) => !fixedColumnIds.has(id));
 
     function handleDragEnd(event: DragEndEvent) {
         const { active, over } = event;
@@ -241,7 +247,16 @@ export function DataTable<TData extends RowData>({
         setColumnOrder((current) => {
             const oldIdx = current.indexOf(String(active.id));
             const newIdx = current.indexOf(String(over.id));
-            return arrayMove(current, oldIdx, newIdx);
+            const reordered = arrayMove(current, oldIdx, newIdx);
+            // Enforce: select always first, actions + _actions always last
+            const withoutFixed = reordered.filter((id) => !fixedColumnIds.has(id));
+            const hasCustomActions = current.includes("actions");
+            return [
+                ...(showCheckbox ? ["select"] : []),
+                ...withoutFixed,
+                ...(hasCustomActions ? ["actions"] : []),
+                ...(actions ? ["_actions"] : []),
+            ];
         });
     }
 
@@ -275,34 +290,36 @@ export function DataTable<TData extends RowData>({
                         collisionDetection={closestCenter}
                         modifiers={[restrictToHorizontalAxis]}
                         onDragEnd={handleDragEnd}
-                        sensors={sensors}
+                        sensors={enableDragDrop ? sensors : []}
                     >
                         <Table>
                             <TableHeader>
                                 {table.getHeaderGroups().map((hg) => (
                                     <TableRow key={hg.id} className="hover:bg-transparent">
                                         <SortableContext
-                                            items={draggableIds}
+                                            items={enableDragDrop ? draggableIds : []}
                                             strategy={horizontalListSortingStrategy}
                                         >
                                             {hg.headers.map((header) => {
-                                                // Select & actions columns are NOT draggable
+                                                // select, actions, _actions are never draggable
                                                 if (
-                                                    header.column.id === "select" ||
-                                                    header.column.id === "_actions"
+                                                    !enableDragDrop ||
+                                                    fixedColumnIds.has(header.column.id)
                                                 ) {
                                                     return (
                                                         <TableHead
                                                             key={header.id}
-                                                            className="h-11 bg-muted/50 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground"
+                                                            className="relative h-11 border-t bg-muted/50 px-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground before:absolute before:inset-y-0 before:left-0 before:w-px before:bg-border first:before:bg-transparent"
                                                             style={{
                                                                 width: header.column.getSize(),
                                                             }}
                                                         >
-                                                            {flexRender(
-                                                                header.column.columnDef.header,
-                                                                header.getContext()
-                                                            )}
+                                                            {header.column.id === "actions"
+                                                                ? "Actions"
+                                                                : flexRender(
+                                                                    header.column.columnDef.header,
+                                                                    header.getContext()
+                                                                )}
                                                         </TableHead>
                                                     );
                                                 }
@@ -351,13 +368,13 @@ export function DataTable<TData extends RowData>({
                                             )}
                                         >
                                             <SortableContext
-                                                items={draggableIds}
+                                                items={enableDragDrop ? draggableIds : []}
                                                 strategy={horizontalListSortingStrategy}
                                             >
                                                 {row.getVisibleCells().map((cell) => {
                                                     if (
-                                                        cell.column.id === "select" ||
-                                                        cell.column.id === "_actions"
+                                                        !enableDragDrop ||
+                                                        fixedColumnIds.has(cell.column.id)
                                                     ) {
                                                         return (
                                                             <TableCell

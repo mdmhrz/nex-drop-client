@@ -404,3 +404,81 @@ export async function updateCashoutStatus(id: string, params: UpdateCashoutStatu
     body: JSON.stringify(params),
   });
 }
+
+// ==================== RIDER APPLICATIONS ====================
+
+export type RiderAccountStatus = "PENDING" | "ACTIVE" | "SUSPENDED" | "REJECTED";
+
+export interface RiderApplicationUser {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  status: string;
+  emailVerified: boolean;
+  image: string | null;
+  phone: string | null;
+  createdAt: string;
+}
+
+export interface RiderApplication {
+  id: string;
+  userId: string;
+  district: string;
+  accountStatus: RiderAccountStatus;
+  currentStatus: "AVAILABLE" | "BUSY" | "OFFLINE";
+  rating: number;
+  totalRatings: number;
+  totalDeliveries: number;
+  createdAt: string;
+  updatedAt: string;
+  user: RiderApplicationUser;
+}
+
+export interface RiderApplicationsMeta {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+}
+
+export interface RiderApplicationsResponse {
+  success: boolean;
+  message: string;
+  data: RiderApplication[];
+  meta: RiderApplicationsMeta;
+}
+
+export interface GetRiderApplicationsParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  accountStatus?: RiderAccountStatus | "ALL";
+  district?: string;
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
+}
+
+export async function getAllRiderApplications(params: GetRiderApplicationsParams = {}): Promise<RiderApplicationsResponse> {
+  const searchParams = new URLSearchParams();
+  if (params.page) searchParams.set("page", params.page.toString());
+  if (params.limit) searchParams.set("limit", params.limit.toString());
+  if (params.search) searchParams.set("search", params.search);
+  if (params.accountStatus && params.accountStatus !== "ALL") searchParams.set("accountStatus", params.accountStatus);
+  if (params.district) searchParams.set("district", params.district);
+  if (params.sortBy) searchParams.set("sortBy", params.sortBy);
+  if (params.sortOrder) searchParams.set("sortOrder", params.sortOrder);
+
+  return serverFetch<RiderApplicationsResponse>(`/rider/applications?${searchParams.toString()}`);
+}
+
+export interface UpdateRiderAccountStatusParams {
+  accountStatus: RiderAccountStatus;
+}
+
+export interface UpdateRiderAccountStatusResponse {
+  success: boolean;
+  message: string;
+  data: RiderApplication;
+}
+
