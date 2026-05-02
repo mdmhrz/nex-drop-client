@@ -2,6 +2,7 @@ import { LoginForm } from "@/components/auth/login-form";
 import { AuthLayout } from "@/components/layouts/auth/auth-layout";
 import { AuthIcon } from "@/components/layouts/auth/auth-icon";
 import { LogIn } from "lucide-react";
+import { DemoLoginButtons } from "@/components/auth/demo-login-buttons";
 
 export default function LoginPage() {
     return (
@@ -29,6 +30,8 @@ export default function LoginPage() {
                         Sign up
                     </a>
                 </div>
+
+                <DemoLoginButtons />
             </div>
         </AuthLayout>
     );

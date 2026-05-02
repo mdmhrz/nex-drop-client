@@ -7,6 +7,7 @@ export interface RiderUser {
     id: string;
     name: string;
     email: string;
+    phone: string | null;
     role: "RIDER";
     status: "ACTIVE" | "BLOCKED" | "DELETED";
 }

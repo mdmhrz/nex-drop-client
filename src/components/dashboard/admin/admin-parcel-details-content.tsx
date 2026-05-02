@@ -22,7 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
+import { RiderSelect } from "@/components/shared/rider-select";
 import { Package, MapPin, User, DollarSign, Calendar, ArrowLeft, UserCheck, AlertTriangle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -142,15 +142,42 @@ export function AdminParcelDetailsContent({ parcelId }: { parcelId: string }) {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="section-heading-text text-2xl font-bold tracking-tight">Parcel Details</h1>
-          <p className="text-muted-foreground">View and manage parcel information.</p>
+      {/* Header with back button and actions */}
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <Button variant="ghost" size="sm" onClick={() => router.back()} className="h-8 w-8 p-0">
+            <ArrowLeft className="h-4 w-4" />
+          </Button>
+          <div>
+            <h1 className="section-heading-text text-2xl font-bold tracking-tight">Parcel Details</h1>
+            <p className="text-sm text-muted-foreground">View and manage parcel information.</p>
+          </div>
         </div>
-        <Button variant="ghost" onClick={() => router.back()}>
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back
-        </Button>
+
+        {/* Actions on the right */}
+        <div className="flex items-center gap-2 flex-shrink-0">
+          <Button
+            onClick={() => {
+              setNewStatus(parcel.status);
+              setSelectedParcelForStatus(true);
+            }}
+            variant="outline"
+            size="sm"
+          >
+            <AlertTriangle className="mr-2 h-4 w-4" />
+            Update Status
+          </Button>
+          {!parcel.rider && (
+            <Button
+              onClick={() => setSelectedParcelForRider(true)}
+              variant="outline"
+              size="sm"
+            >
+              <UserCheck className="mr-2 h-4 w-4" />
+              Assign Rider
+            </Button>
+          )}
+        </div>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -319,29 +346,6 @@ export function AdminParcelDetailsContent({ parcelId }: { parcelId: string }) {
         </CardContent>
       </Card>
 
-      {/* Actions */}
-      <div className="flex gap-3">
-        <Button
-          onClick={() => {
-            setNewStatus(parcel.status);
-            setSelectedParcelForStatus(true);
-          }}
-          variant="outline"
-        >
-          <AlertTriangle className="mr-2 h-4 w-4" />
-          Update Status
-        </Button>
-        {!parcel.rider && (
-          <Button
-            onClick={() => setSelectedParcelForRider(true)}
-            variant="outline"
-          >
-            <UserCheck className="mr-2 h-4 w-4" />
-            Assign Rider
-          </Button>
-        )}
-      </div>
-
       {/* Update Status Dialog */}
       <Dialog open={selectedParcelForStatus} onOpenChange={setSelectedParcelForStatus}>
         <DialogContent className="sm:max-w-[425px]">
@@ -398,11 +402,11 @@ export function AdminParcelDetailsContent({ parcelId }: { parcelId: string }) {
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium">Rider ID</label>
-              <Input
-                placeholder="Enter rider ID"
+              <label className="text-sm font-medium">Select Rider</label>
+              <RiderSelect
                 value={selectedRiderId}
-                onChange={(e) => setSelectedRiderId(e.target.value)}
+                onValueChange={setSelectedRiderId}
+                placeholder="Search and select a rider..."
               />
             </div>
           </div>

@@ -8,6 +8,7 @@ import { InputField } from "@/components/shared/input-field";
 import { Checkbox } from "@/components/ui/checkbox";
 import { SubmitButton } from "@/components/shared/submit-button";
 import { SocialLogin } from "@/components/auth/social-login";
+
 import { Mail, Lock, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
 import { authService, LoginData } from "@/services/auth.service";
@@ -138,6 +139,8 @@ export function LoginForm() {
           Need to verify your email?
         </button>
       </div>
+
+
     </div>
   );
 }

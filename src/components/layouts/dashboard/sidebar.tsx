@@ -164,9 +164,8 @@ export function DashboardSidebar({ role, mobileOpen, onMobileClose }: DashboardS
       <Sheet open={mobileOpen} onOpenChange={(open) => !open && onMobileClose?.()}>
         <SheetContent side="left" className="w-64 p-0 flex flex-col">
           <SheetTitle className="sr-only">Navigation</SheetTitle>
-          <div className="flex h-16 items-center border-b px-6 shrink-0">
-            <span className="font-bold text-xl tracking-tight font-nevera">NexDrop</span>
-          </div>
+
+          <Logo className="px-6 py-4" />
           <NavItems role={role} collapsed={false} onNavigate={onMobileClose} />
         </SheetContent>
       </Sheet>

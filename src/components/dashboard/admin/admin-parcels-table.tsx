@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { TableActionDropdown } from "@/components/shared/table-action-dropdown";
+import { RiderSelect } from "@/components/shared/rider-select";
 import { Eye, UserCheck, AlertTriangle, Search, X, MapPin } from "lucide-react";
 import type { ParcelStatus } from "@/services/admin.server";
 import { format } from "date-fns";
@@ -321,11 +322,11 @@ export function AdminParcelsTable() {
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium">Rider ID</label>
-              <Input
-                placeholder="Enter rider ID"
+              <label className="text-sm font-medium">Select Rider</label>
+              <RiderSelect
                 value={selectedRiderId}
-                onChange={(e) => setSelectedRiderId(e.target.value)}
+                onValueChange={setSelectedRiderId}
+                placeholder="Search and select a rider..."
               />
             </div>
           </div>
