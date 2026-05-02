@@ -52,18 +52,15 @@ export default async function ParcelPage({ params }: { params: Promise<{ id: str
         <HydrationBoundary state={dehydrate(queryClient)}>
             <div className="space-y-6">
                 {/* Page Header */}
-                <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                    <Button variant="outline" size="icon" asChild>
+                        <Link href="/dashboard/parcels">
+                            <ArrowLeft className="size-4" />
+                        </Link>
+                    </Button>
                     <div>
                         <h1 className="section-heading-text text-2xl font-bold tracking-tight">Parcel Details</h1>
                         <p className="text-muted-foreground">Tracking ID: {parcel.trackingId}</p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <Button variant="outline" asChild>
-                            <Link href="/dashboard/parcels">
-                                <ArrowLeft className="size-4 mr-2" />
-                                Back to Parcels
-                            </Link>
-                        </Button>
                     </div>
                 </div>
 

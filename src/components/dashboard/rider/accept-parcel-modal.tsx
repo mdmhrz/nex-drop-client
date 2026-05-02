@@ -112,6 +112,7 @@ export function AcceptParcelModal({ parcel, open, onOpenChange }: AcceptParcelMo
                             pendingLabel="Accepting..."
                             icon={Check}
                             type="submit"
+                            className="w-auto py-4"
                         >
                             Accept Parcel
                         </SubmitButton>

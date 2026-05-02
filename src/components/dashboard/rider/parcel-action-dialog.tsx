@@ -117,6 +117,7 @@ export function ParcelActionDialog({ parcel, action, open, onOpenChange }: Parce
                             e.preventDefault();
                             handleConfirm();
                         }}
+                        className="w-auto py-4"
                     >
                         {config.buttonText}
                     </SubmitButton>

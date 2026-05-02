@@ -30,7 +30,7 @@ interface DemoCredentials {
  */
 
 export function DemoLoginButtons() {
-    const [isPending, setIsPending] = useState(false);
+    const [loadingEmail, setLoadingEmail] = useState<string | null>(null);
 
     // Check if demo login is enabled
     const isEnabled = process.env.NEXT_PUBLIC_DEMO_LOGIN_ENABLED === "true";
@@ -67,7 +67,7 @@ export function DemoLoginButtons() {
     }
 
     const handleDemoLogin = async (email: string, password: string, label: string) => {
-        setIsPending(true);
+        setLoadingEmail(email);
         const toastId = toast.loading(`Logging in as ${label}...`);
 
         try {
@@ -98,7 +98,7 @@ export function DemoLoginButtons() {
             const errorMessage =
                 (error as { message?: string })?.message || `Failed to login as ${label}`;
             toast.error(errorMessage, { id: toastId });
-            setIsPending(false);
+            setLoadingEmail(null);
         }
     };
 
@@ -122,10 +122,10 @@ export function DemoLoginButtons() {
                         onClick={() =>
                             handleDemoLogin(cred.email, cred.password, cred.label)
                         }
-                        disabled={isPending}
+                        disabled={loadingEmail !== null}
                         className="text-xs h-9"
                     >
-                        {isPending ? "Logging in..." : `Login as ${cred.label.split(" ")[0]}`}
+                        {loadingEmail === cred.email ? "Logging in..." : `Login as ${cred.label.split(" ")[0]}`}
                     </Button>
                 ))}
             </div>
