@@ -52,6 +52,8 @@ export function OurServices() {
                     title="Our Services"
                     description="We provide comprehensive and reliable delivery solutions tailored to your business and customer needs."
                     highlightWord="Services"
+                    textColor="text-white"
+                    descriptionColor="text-gray-300"
                 />
 
                 {/* Services Grid */}
@@ -61,7 +63,7 @@ export function OurServices() {
                         return (
                             <Card
                                 key={service.id}
-                                className="group border  dark:border-0  bg-card/50 backdrop-blur-sm p-4 text-center transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:bg-card sm:p-5 overflow-hidden cursor-pointer h-full flex flex-col"
+                                className="group border border-white/10 bg-white/10 backdrop-blur-sm p-4 text-center transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:bg-white/15 sm:p-5 overflow-hidden cursor-pointer h-full flex flex-col"
                             >
                                 {/* Icon */}
                                 <div className="flex items-center justify-center mb-3">
@@ -71,7 +73,7 @@ export function OurServices() {
                                 </div>
 
                                 {/* Title */}
-                                <h3 className="text-center text-base font-semibold text-slate-900 dark:text-foreground sm:text-lg">
+                                <h3 className="text-center text-base font-semibold text-white sm:text-lg">
                                     {service.title}
                                 </h3>
 
@@ -79,7 +81,7 @@ export function OurServices() {
                                 <div className="my-2 h-0.5 w-8 bg-primary mx-auto" />
 
                                 {/* Description */}
-                                <p className="text-center text-sm leading-relaxed text-slate-600 dark:text-muted-foreground grow">
+                                <p className="text-center text-sm leading-relaxed text-gray-300 grow">
                                     {service.description}
                                 </p>
 

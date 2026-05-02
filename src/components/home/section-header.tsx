@@ -6,12 +6,16 @@ interface SectionHeaderProps {
     title: string;
     description: string;
     highlightWord?: string;
+    textColor?: string;
+    descriptionColor?: string;
 }
 
 export function SectionHeader({
     title,
     description,
-    highlightWord
+    highlightWord,
+    textColor,
+    descriptionColor
 }: SectionHeaderProps) {
     return (
         <div className="mx-auto max-w-3xl text-center">
@@ -20,7 +24,7 @@ export function SectionHeader({
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
                 viewport={{ once: true }}
-                className="text-3xl font-bold tracking-tight section-heading-text sm:text-4xl md:text-5xl"
+                className={`text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl ${textColor || "section-heading-text"}`}
             >
                 {highlightWord ? (
                     <>
@@ -37,7 +41,7 @@ export function SectionHeader({
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.1 }}
                 viewport={{ once: true }}
-                className="mt-4 text-base text-muted-foreground sm:text-lg"
+                className={`mt-4 text-base sm:text-lg ${descriptionColor || "text-muted-foreground"}`}
             >
                 {description}
             </motion.p>

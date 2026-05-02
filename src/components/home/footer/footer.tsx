@@ -132,139 +132,136 @@ const Footer = () => {
                 className="max-w-7xl mx-auto px-6"
             >
                 {/* Main Footer Content */}
-                <div className="py-16 md:py-20">
-                    {/* CTA & Logo Section - Reorganized for mobile/desktop */}
-                    <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16 order-first md:order-0">
-                        {/* Order: Mobile shows CTA first, Desktop shows Logo first */}
-                        <div className="order-2 md:order-1">
-                            {/* Logo Section */}
-                            <div className="mb-8">
-                                <div className="mb-6">
-                                    <Logo />
-                                </div>
-                                <p className="text-sm leading-relaxed text-background/75 dark:text-foreground/75 mb-8 max-w-xs">
-                                    Transforming parcel delivery with real-time tracking, secure handling, and guaranteed on-time delivery.
+                <div className="py-12 md:py-16">
+                    {/* CTA Section at Top */}
+                    <motion.div variants={buttonVariants} className="mb-12 p-8 rounded-2xl bg-gradient-to-br from-primary/20 via-primary/10 to-primary/5 border border-primary/30 backdrop-blur-sm">
+                        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                            <div className="text-center md:text-left">
+                                <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">
+                                    Ready to send a parcel?
+                                </h2>
+                                <p className="text-slate-300">
+                                    Fast, secure, and reliable delivery at your fingertips.
                                 </p>
-
-                                {/* Social Links */}
-                                <div className="flex items-center gap-3 mb-8">
-                                    <span className="text-xs font-semibold uppercase tracking-wider text-background/60 dark:text-foreground/60">
-                                        Connect
-                                    </span>
-                                    <div className="flex gap-3">
-                                        {socialLinks.map((social) => {
-                                            const Icon = social.icon;
-                                            return (
-                                                <motion.a
-                                                    key={social.name}
-                                                    href={social.url}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    whileHover={{ scale: 1.2, y: -4 }}
-                                                    whileTap={{ scale: 0.9 }}
-                                                    className={`w-10 h-10 rounded-lg bg-background/10 dark:bg-foreground/10 flex items-center justify-center text-background dark:text-foreground transition-all duration-300 ${social.color} border border-background/20 dark:border-foreground/20`}
-                                                    aria-label={social.name}
-                                                >
-                                                    <Icon className="w-5 h-5" />
-                                                </motion.a>
-                                            );
-                                        })}
-                                    </div>
-                                </div>
-
-                                {/* We Support - Payment Methods */}
-                                <div>
-                                    <h3 className="text-xs font-bold uppercase tracking-widest text-background dark:text-foreground mb-4">
-                                        We Support
-                                    </h3>
-                                    <div className="flex gap-4">
-                                        {paymentMethods.map((method) => (
-                                            <motion.div
-                                                key={method.name}
-                                                whileHover={{ scale: 1.1 }}
-                                                className={`relative h-10 overflow-hidden flex items-center justify-center ${method.name === 'Stripe' ? 'w-20' : 'w-32'
-                                                    }`}
-                                                title={method.name}
-                                            >
-                                                <Image
-                                                    src={method.path}
-                                                    alt={method.name}
-                                                    width={method.name === 'Stripe' ? 80 : 160}
-                                                    height={method.name === 'Stripe' ? 24 : 32}
-                                                    className="object-contain h-full w-full"
-                                                />
-                                            </motion.div>
-                                        ))}
-                                    </div>
-                                </div>
                             </div>
-                        </div>
-
-                        {/* CTA Section - Mobile shows first, Desktop shows on right */}
-                        <motion.div variants={buttonVariants} className="order-1 md:order-2 flex flex-col justify-center items-center md:items-start text-center md:text-left">
-                            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-background dark:text-foreground">
-                                Ready to send a parcel?
-                            </h2>
-                            <p className="text-background/75 dark:text-foreground/75 mb-8 max-w-lg">
-                                Get your package delivered fast and securely. Track in real-time and enjoy peace of mind.
-                            </p>
                             <motion.button
                                 onClick={handleSendParcelClick}
                                 disabled={isLoading}
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                                className="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 disabled:bg-primary/50 disabled:cursor-not-allowed text-primary-foreground font-semibold px-8 py-4 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl"
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
+                                className="inline-flex items-center gap-2 bg-white hover:bg-slate-100 disabled:bg-slate-400 disabled:cursor-not-allowed text-slate-900 font-semibold px-8 py-4 rounded-xl transition-all duration-300 shadow-xl hover:shadow-2xl whitespace-nowrap"
                             >
                                 <Package className="w-5 h-5" />
                                 {isLoading ? 'Redirecting...' : 'Send Your Parcel Now'}
                                 <ArrowRight className="w-5 h-5" />
                             </motion.button>
-                        </motion.div>
+                        </div>
                     </motion.div>
 
-
-                    {/* Links Grid */}
-                    <motion.div variants={itemVariants} className="grid grid-cols-2 md:grid-cols-3 gap-8 mb-16 py-8 border-y border-background/10 dark:border-foreground/10">
-                        {Object.entries(footerSections).map(([key, section]) => (
-                            <div key={key}>
-                                <h3 className="font-bold text-sm uppercase tracking-widest text-background dark:text-foreground mb-6">
-                                    {section.title}
-                                </h3>
-                                <ul className="space-y-3">
-                                    {section.links.map((link) => (
-                                        <li key={link.href}>
-                                            <MotionLink
-                                                href={link.href}
-                                                whileHover={{ x: 4 }}
-                                                className="text-sm text-background/70 dark:text-foreground/70 hover:text-background dark:hover:text-foreground transition-colors duration-300"
-                                            >
-                                                {link.label}
-                                            </MotionLink>
-                                        </li>
-                                    ))}
-                                </ul>
+                    {/* Logo & Links Section */}
+                    <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
+                        {/* Left: Logo, Description, Social */}
+                        <div>
+                            <div className="mb-6">
+                                <Logo />
                             </div>
-                        ))}
+                            <p className="text-sm leading-relaxed text-slate-400 mb-6 max-w-sm">
+                                Transforming parcel delivery with real-time tracking, secure handling, and guaranteed on-time delivery across Bangladesh.
+                            </p>
+                            {/* Social Links */}
+                            <div className="flex gap-3">
+                                {socialLinks.map((social) => {
+                                    const Icon = social.icon;
+                                    return (
+                                        <motion.a
+                                            key={social.name}
+                                            href={social.url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            whileHover={{ scale: 1.1, y: -2 }}
+                                            whileTap={{ scale: 0.95 }}
+                                            className={`w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-slate-400 transition-all duration-300 ${social.color} hover:bg-slate-700`}
+                                            aria-label={social.name}
+                                        >
+                                            <Icon className="w-5 h-5" />
+                                        </motion.a>
+                                    );
+                                })}
+                            </div>
+                        </div>
+
+                        {/* Right: Footer Links */}
+                        <div className="grid grid-cols-2 gap-8">
+                            {Object.entries(footerSections).map(([key, section]) => (
+                                <div key={key}>
+                                    <h3 className="font-semibold text-white text-sm mb-4">
+                                        {section.title}
+                                    </h3>
+                                    <ul className="space-y-3">
+                                        {section.links.map((link) => (
+                                            <li key={link.href}>
+                                                <MotionLink
+                                                    href={link.href}
+                                                    whileHover={{ x: 3 }}
+                                                    className="text-sm text-slate-400 hover:text-white transition-colors duration-200"
+                                                >
+                                                    {link.label}
+                                                </MotionLink>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            ))}
+                        </div>
+                    </motion.div>
+
+                    {/* Payment Methods */}
+                    <motion.div variants={itemVariants} className="mb-8 pt-8 border-t border-slate-800">
+                        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                            <div className="text-sm text-slate-500">
+                                <span className="font-medium text-slate-400">Payment Methods:</span>
+                            </div>
+                            <div className="flex gap-4">
+                                {paymentMethods.map((method) => (
+                                    <motion.div
+                                        key={method.name}
+                                        whileHover={{ scale: 1.05 }}
+                                        className={`relative h-8 overflow-hidden flex items-center justify-center ${method.name === 'Stripe' ? 'w-16' : 'w-24'}`}
+                                        title={method.name}
+                                    >
+                                        <Image
+                                            src={method.path}
+                                            alt={method.name}
+                                            width={method.name === 'Stripe' ? 64 : 96}
+                                            height={method.name === 'Stripe' ? 20 : 24}
+                                            className="object-contain h-full w-full opacity-80 hover:opacity-100 transition-opacity"
+                                        />
+                                    </motion.div>
+                                ))}
+                            </div>
+                        </div>
                     </motion.div>
 
                     {/* Bottom Bar */}
                     <motion.div
                         variants={itemVariants}
-                        className="flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-background/60 dark:text-foreground/60"
+                        className="pt-8 border-t border-slate-800"
                     >
-                        <div>
-                            © {new Date().getFullYear()} NexDrop. All rights reserved
-                        </div>
-                        <div className="flex gap-6">
-                            <Link href="/privacy-policy" className="hover:text-background dark:hover:text-foreground transition-colors">
-                                Privacy Policy
-                            </Link>
-                            <Link href="/terms-of-service" className="hover:text-background dark:hover:text-foreground transition-colors">
-                                Terms of Service
-                            </Link>
-                            <Link href="/cookie-policy" className="hover:text-background dark:hover:text-foreground transition-colors">
-                                Cookie Policy
-                            </Link>
+                        <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500">
+                            <div>
+                                © {new Date().getFullYear()} NexDrop. All rights reserved.
+                            </div>
+                            <div className="flex gap-6">
+                                <Link href="/privacy-policy" className="hover:text-slate-300 transition-colors">
+                                    Privacy Policy
+                                </Link>
+                                <Link href="/terms-of-service" className="hover:text-slate-300 transition-colors">
+                                    Terms of Service
+                                </Link>
+                                <Link href="/cookie-policy" className="hover:text-slate-300 transition-colors">
+                                    Cookie Policy
+                                </Link>
+                            </div>
                         </div>
                     </motion.div>
                 </div>
