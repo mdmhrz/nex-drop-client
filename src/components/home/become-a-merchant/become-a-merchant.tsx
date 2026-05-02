@@ -58,7 +58,7 @@ export function BecomeAMerchant() {
                             >
                                 Become a Merchant
                             </PrimaryButton>
-                            <PrimaryButton variant="outline" className="py-6 border-primary text-primary">
+                            <PrimaryButton variant="outline" className="py-6 border-primary text-primary bg-transparent">
                                 Become a Customer
                             </PrimaryButton>
 
