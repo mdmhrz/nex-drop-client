@@ -418,7 +418,7 @@ This project is licensed under the MIT License.
 
 ## Support
 
-For support, email support@nexdrop.com or open an issue on GitHub.
+For support, email razufreelance@gmail.com or open an issue on GitHub.
 
 ## Acknowledgments
 
